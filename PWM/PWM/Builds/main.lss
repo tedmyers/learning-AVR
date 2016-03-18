@@ -3,23 +3,23 @@ Builds/main.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00000174  000001e8  2**0
+  0 .data         00000000  00800100  000000e6  0000015a  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         00000174  00000000  00000000  00000074  2**1
+  1 .text         000000e6  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .stab         000006fc  00000000  00000000  000001e8  2**2
+  2 .stab         00000588  00000000  00000000  0000015c  2**2
                   CONTENTS, READONLY, DEBUGGING
-  3 .stabstr      00000c36  00000000  00000000  000008e4  2**0
+  3 .stabstr      00000c38  00000000  00000000  000006e4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .comment      00000011  00000000  00000000  0000151a  2**0
+  4 .comment      00000011  00000000  00000000  0000131c  2**0
                   CONTENTS, READONLY
-  5 .debug_aranges 00000020  00000000  00000000  00001530  2**3
+  5 .debug_aranges 00000020  00000000  00000000  00001330  2**3
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   000000be  00000000  00000000  00001550  2**0
+  6 .debug_info   000000be  00000000  00000000  00001350  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000014  00000000  00000000  0000160e  2**0
+  7 .debug_abbrev 00000014  00000000  00000000  0000140e  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00000058  00000000  00000000  00001622  2**0
+  8 .debug_line   00000058  00000000  00000000  00001422  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -60,247 +60,89 @@ Disassembly of section .text:
   70:	de bf       	out	0x3e, r29	; 62
   72:	cd bf       	out	0x3d, r28	; 61
   74:	0e 94 5a 00 	call	0xb4	; 0xb4 <main>
-  78:	0c 94 b8 00 	jmp	0x170	; 0x170 <_exit>
+  78:	0c 94 71 00 	jmp	0xe2	; 0xe2 <_exit>
 
 0000007c <__bad_interrupt>:
   7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 00000080 <pwm_init>:
-#include <util/delay.h>
-
-void pwm_init(void)
-{
-    // Fast PWM mode for timers 0 and 2
-    TCCR0A |= (1 << WGM01) | (1 << WGM00);
   80:	84 b5       	in	r24, 0x24	; 36
   82:	83 60       	ori	r24, 0x03	; 3
   84:	84 bd       	out	0x24, r24	; 36
-    TCCR2A |= (1 << WGM21) | (1 << WGM20);
   86:	e0 eb       	ldi	r30, 0xB0	; 176
   88:	f0 e0       	ldi	r31, 0x00	; 0
   8a:	80 81       	ld	r24, Z
   8c:	83 60       	ori	r24, 0x03	; 3
   8e:	80 83       	st	Z, r24
-    
-    // clear OC0A on compare match, set on BOTTOM (inverting)
-    // 255 is fully off, 0 is fully on
-    TCCR0A |= (1 << COM0A1) | (1 << COM0A0) | (1 << COM0B1) | (1 << COM0B0);
   90:	84 b5       	in	r24, 0x24	; 36
   92:	80 6f       	ori	r24, 0xF0	; 240
   94:	84 bd       	out	0x24, r24	; 36
-    TCCR2A |= (1 << COM2B1) | (1 << COM2B0);
   96:	80 81       	ld	r24, Z
   98:	80 63       	ori	r24, 0x30	; 48
   9a:	80 83       	st	Z, r24
-    
-    // Use clock directly, no prescaler
-    TCCR0B |= (0 << CS02) | (0 << CS01) | (1 << CS00);
   9c:	85 b5       	in	r24, 0x25	; 37
   9e:	81 60       	ori	r24, 0x01	; 1
   a0:	85 bd       	out	0x25, r24	; 37
-    TCCR2B |= (0 << CS22) | (0 << CS21) | (1 << CS20);
   a2:	e1 eb       	ldi	r30, 0xB1	; 177
   a4:	f0 e0       	ldi	r31, 0x00	; 0
   a6:	80 81       	ld	r24, Z
   a8:	81 60       	ori	r24, 0x01	; 1
   aa:	80 83       	st	Z, r24
-    
-    // initialize counter for TIMER 0 and TIMER 2
-    TCNT0 = 0;
   ac:	16 bc       	out	0x26, r1	; 38
-    TCNT2 = 0;
   ae:	10 92 b2 00 	sts	0x00B2, r1
   b2:	08 95       	ret
 
 000000b4 <main>:
-
-
-int main(void)
-{
-    //Initialize PWM
-    pwm_init();
-  b4:	0e 94 40 00 	call	0x80	; 0x80 <pwm_init>
     
     // OC0A is tied to pin PD6 (pin 12 on 328 chip)
     // OC0B is tied to pin PD5 (pin 11 on 328 chip)
     // OC2B is tied to pin PD3 (pin 5 on 328 chip)
+    // Set all three pins to output
     DDRD |= (1 << PD6) | (1 << PD5) | (1 << PD3);
-  b8:	8a b1       	in	r24, 0x0a	; 10
-  ba:	88 66       	ori	r24, 0x68	; 104
-  bc:	8a b9       	out	0x0a, r24	; 10
+  b4:	8a b1       	in	r24, 0x0a	; 10
+  b6:	88 66       	ori	r24, 0x68	; 104
+  b8:	8a b9       	out	0x0a, r24	; 10
     
     // Start all color channels off
     OCR0A = 255;
-  be:	8f ef       	ldi	r24, 0xFF	; 255
-  c0:	87 bd       	out	0x27, r24	; 39
+  ba:	8f ef       	ldi	r24, 0xFF	; 255
+  bc:	87 bd       	out	0x27, r24	; 39
     OCR0B = 255;
-  c2:	88 bd       	out	0x28, r24	; 40
+  be:	88 bd       	out	0x28, r24	; 40
     OCR2B = 255;
-  c4:	80 93 b4 00 	sts	0x00B4, r24
+  c0:	80 93 b4 00 	sts	0x00B4, r24
+    int delay_amount = 20; // milliseconds to delay between changing PWM values
     
     while(1)
     {
-        // fade green up
-        for (int i = 0; i < 256; i++)
-  c8:	80 e0       	ldi	r24, 0x00	; 0
-  ca:	90 e0       	ldi	r25, 0x00	; 0
-  cc:	8f 3f       	cpi	r24, 0xFF	; 255
-  ce:	91 05       	cpc	r25, r1
-  d0:	09 f0       	breq	.+2      	; 0xd4 <main+0x20>
-  d2:	5c f4       	brge	.+22     	; 0xea <main+0x36>
-        {
-            OCR0A = (255-i);
-  d4:	28 2f       	mov	r18, r24
-  d6:	20 95       	com	r18
-  d8:	27 bd       	out	0x27, r18	; 39
+        
+        PORTD |= (1 << PD6);
+  c4:	5e 9a       	sbi	0x0b, 6	; 11
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
-  da:	e3 ef       	ldi	r30, 0xF3	; 243
-  dc:	f1 e0       	ldi	r31, 0x01	; 1
-  de:	31 97       	sbiw	r30, 0x01	; 1
-  e0:	f1 f7       	brne	.-4      	; 0xde <main+0x2a>
-  e2:	00 c0       	rjmp	.+0      	; 0xe4 <main+0x30>
-  e4:	00 00       	nop
-    OCR2B = 255;
-    
-    while(1)
-    {
-        // fade green up
-        for (int i = 0; i < 256; i++)
-  e6:	01 96       	adiw	r24, 0x01	; 1
-  e8:	f1 cf       	rjmp	.-30     	; 0xcc <main+0x18>
-  ea:	80 e0       	ldi	r24, 0x00	; 0
-  ec:	90 e0       	ldi	r25, 0x00	; 0
-            _delay_ms(2);
-        }
-        // fade green down
-        for (int j = 255; j >= 0; j--)
-        {
-            OCR0A = (255-j);
-  ee:	87 bd       	out	0x27, r24	; 39
-  f0:	e3 ef       	ldi	r30, 0xF3	; 243
-  f2:	f1 e0       	ldi	r31, 0x01	; 1
-  f4:	31 97       	sbiw	r30, 0x01	; 1
-  f6:	f1 f7       	brne	.-4      	; 0xf4 <main+0x40>
-  f8:	00 c0       	rjmp	.+0      	; 0xfa <main+0x46>
-  fa:	00 00       	nop
-  fc:	01 96       	adiw	r24, 0x01	; 1
-        {
-            OCR0A = (255-i);
-            _delay_ms(2);
-        }
-        // fade green down
-        for (int j = 255; j >= 0; j--)
-  fe:	81 15       	cp	r24, r1
- 100:	f1 e0       	ldi	r31, 0x01	; 1
- 102:	9f 07       	cpc	r25, r31
- 104:	a1 f7       	brne	.-24     	; 0xee <main+0x3a>
- 106:	8f ef       	ldi	r24, 0xFF	; 255
- 108:	90 e0       	ldi	r25, 0x00	; 0
-        
-        
-        //fade blue up
-        for (int i = 0; i < 256; i++)
-        {
-            OCR0B = (255-i);
- 10a:	88 bd       	out	0x28, r24	; 40
- 10c:	e3 ef       	ldi	r30, 0xF3	; 243
- 10e:	f1 e0       	ldi	r31, 0x01	; 1
- 110:	31 97       	sbiw	r30, 0x01	; 1
- 112:	f1 f7       	brne	.-4      	; 0x110 <main+0x5c>
- 114:	00 c0       	rjmp	.+0      	; 0x116 <main+0x62>
- 116:	00 00       	nop
- 118:	01 97       	sbiw	r24, 0x01	; 1
- 11a:	b8 f7       	brcc	.-18     	; 0x10a <main+0x56>
-            _delay_ms(2);
-        }
-        
-        
-        //fade blue up
-        for (int i = 0; i < 256; i++)
- 11c:	80 e0       	ldi	r24, 0x00	; 0
- 11e:	90 e0       	ldi	r25, 0x00	; 0
-            _delay_ms(2);
-        }
-        // fade blue down
-        for (int j = 255; j >= 0; j--)
-        {
-            OCR0B = (255-j);
- 120:	88 bd       	out	0x28, r24	; 40
- 122:	e3 ef       	ldi	r30, 0xF3	; 243
- 124:	f1 e0       	ldi	r31, 0x01	; 1
- 126:	31 97       	sbiw	r30, 0x01	; 1
- 128:	f1 f7       	brne	.-4      	; 0x126 <main+0x72>
- 12a:	00 c0       	rjmp	.+0      	; 0x12c <main+0x78>
- 12c:	00 00       	nop
- 12e:	01 96       	adiw	r24, 0x01	; 1
-        {
-            OCR0B = (255-i);
-            _delay_ms(2);
-        }
-        // fade blue down
-        for (int j = 255; j >= 0; j--)
- 130:	81 15       	cp	r24, r1
- 132:	f1 e0       	ldi	r31, 0x01	; 1
- 134:	9f 07       	cpc	r25, r31
- 136:	a1 f7       	brne	.-24     	; 0x120 <main+0x6c>
- 138:	8f ef       	ldi	r24, 0xFF	; 255
- 13a:	90 e0       	ldi	r25, 0x00	; 0
-        }
-        
-        //fade red up
-        for (int i = 0; i < 256; i++)
-        {
-            OCR2B = (255-i);
- 13c:	80 93 b4 00 	sts	0x00B4, r24
- 140:	e3 ef       	ldi	r30, 0xF3	; 243
- 142:	f1 e0       	ldi	r31, 0x01	; 1
- 144:	31 97       	sbiw	r30, 0x01	; 1
- 146:	f1 f7       	brne	.-4      	; 0x144 <main+0x90>
- 148:	00 c0       	rjmp	.+0      	; 0x14a <main+0x96>
- 14a:	00 00       	nop
- 14c:	01 97       	sbiw	r24, 0x01	; 1
- 14e:	b0 f7       	brcc	.-20     	; 0x13c <main+0x88>
-            OCR0B = (255-j);
-            _delay_ms(2);
-        }
-        
-        //fade red up
-        for (int i = 0; i < 256; i++)
- 150:	80 e0       	ldi	r24, 0x00	; 0
- 152:	90 e0       	ldi	r25, 0x00	; 0
-            _delay_ms(2);
-        }
-        // fade red down
-        for (int j = 255; j >= 0; j--)
-        {
-            OCR2B = (255-j);
- 154:	80 93 b4 00 	sts	0x00B4, r24
- 158:	e3 ef       	ldi	r30, 0xF3	; 243
- 15a:	f1 e0       	ldi	r31, 0x01	; 1
- 15c:	31 97       	sbiw	r30, 0x01	; 1
- 15e:	f1 f7       	brne	.-4      	; 0x15c <main+0xa8>
- 160:	00 c0       	rjmp	.+0      	; 0x162 <main+0xae>
- 162:	00 00       	nop
- 164:	01 96       	adiw	r24, 0x01	; 1
-        {
-            OCR2B = (255-i);
-            _delay_ms(2);
-        }
-        // fade red down
-        for (int j = 255; j >= 0; j--)
- 166:	81 15       	cp	r24, r1
- 168:	f1 e0       	ldi	r31, 0x01	; 1
- 16a:	9f 07       	cpc	r25, r31
- 16c:	99 f7       	brne	.-26     	; 0x154 <main+0xa0>
- 16e:	ac cf       	rjmp	.-168    	; 0xc8 <main+0x14>
+  c6:	89 ef       	ldi	r24, 0xF9	; 249
+  c8:	90 e0       	ldi	r25, 0x00	; 0
+  ca:	01 97       	sbiw	r24, 0x01	; 1
+  cc:	f1 f7       	brne	.-4      	; 0xca <main+0x16>
+  ce:	00 c0       	rjmp	.+0      	; 0xd0 <main+0x1c>
+  d0:	00 00       	nop
+        _delay_ms(1);
+        PORTD &= ~(1 << PD6);
+  d2:	5e 98       	cbi	0x0b, 6	; 11
+  d4:	89 ec       	ldi	r24, 0xC9	; 201
+  d6:	98 e0       	ldi	r25, 0x08	; 8
+  d8:	01 97       	sbiw	r24, 0x01	; 1
+  da:	f1 f7       	brne	.-4      	; 0xd8 <main+0x24>
+  dc:	00 c0       	rjmp	.+0      	; 0xde <main+0x2a>
+  de:	00 00       	nop
+  e0:	f1 cf       	rjmp	.-30     	; 0xc4 <main+0x10>
 
-00000170 <_exit>:
- 170:	f8 94       	cli
+000000e2 <_exit>:
+  e2:	f8 94       	cli
 
-00000172 <__stop_program>:
- 172:	ff cf       	rjmp	.-2      	; 0x172 <__stop_program>
+000000e4 <__stop_program>:
+  e4:	ff cf       	rjmp	.-2      	; 0xe4 <__stop_program>

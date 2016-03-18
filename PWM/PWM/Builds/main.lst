@@ -6,134 +6,62 @@
    6               	__zero_reg__ = 1
    8               		.text
    9               	.Ltext0:
- 102               	.global	pwm_init
- 104               	pwm_init:
-   1:/Users/sethpenna/Desktop/PWM/PWM/main.c **** #include <avr/io.h>
-   2:/Users/sethpenna/Desktop/PWM/PWM/main.c **** #include <avr/interrupt.h>
-   3:/Users/sethpenna/Desktop/PWM/PWM/main.c **** #include <util/delay.h>
-   4:/Users/sethpenna/Desktop/PWM/PWM/main.c **** 
-   5:/Users/sethpenna/Desktop/PWM/PWM/main.c **** void pwm_init(void)
-   6:/Users/sethpenna/Desktop/PWM/PWM/main.c **** {
- 106               	.LM0:
- 107               	.LFBB1:
- 108               	/* prologue: function */
- 109               	/* frame size = 0 */
- 110               	/* stack size = 0 */
- 111               	.L__stack_usage = 0
-   7:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     // Fast PWM mode for timers 0 and 2
-   8:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     TCCR0A |= (1 << WGM01) | (1 << WGM00);
- 113               	.LM1:
- 114 0000 84B5      		in r24,0x24
- 115 0002 8360      		ori r24,lo8(3)
- 116 0004 84BD      		out 0x24,r24
-   9:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     TCCR2A |= (1 << WGM21) | (1 << WGM20);
- 118               	.LM2:
- 119 0006 E0EB      		ldi r30,lo8(-80)
- 120 0008 F0E0      		ldi r31,0
- 121 000a 8081      		ld r24,Z
- 122 000c 8360      		ori r24,lo8(3)
- 123 000e 8083      		st Z,r24
-  10:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     
-  11:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     // clear OC0A on compare match, set on BOTTOM (inverting)
-  12:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     // 255 is fully off, 0 is fully on
-  13:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     TCCR0A |= (1 << COM0A1) | (1 << COM0A0) | (1 << COM0B1) | (1 << COM0B0);
- 125               	.LM3:
- 126 0010 84B5      		in r24,0x24
- 127 0012 806F      		ori r24,lo8(-16)
- 128 0014 84BD      		out 0x24,r24
-  14:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     TCCR2A |= (1 << COM2B1) | (1 << COM2B0);
- 130               	.LM4:
- 131 0016 8081      		ld r24,Z
- 132 0018 8063      		ori r24,lo8(48)
- 133 001a 8083      		st Z,r24
-  15:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     
-  16:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     // Use clock directly, no prescaler
-  17:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     TCCR0B |= (0 << CS02) | (0 << CS01) | (1 << CS00);
- 135               	.LM5:
- 136 001c 85B5      		in r24,0x25
- 137 001e 8160      		ori r24,lo8(1)
- 138 0020 85BD      		out 0x25,r24
-  18:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     TCCR2B |= (0 << CS22) | (0 << CS21) | (1 << CS20);
- 140               	.LM6:
- 141 0022 E1EB      		ldi r30,lo8(-79)
- 142 0024 F0E0      		ldi r31,0
- 143 0026 8081      		ld r24,Z
- 144 0028 8160      		ori r24,lo8(1)
- 145 002a 8083      		st Z,r24
-  19:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     
-  20:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     // initialize counter for TIMER 0 and TIMER 2
-  21:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     TCNT0 = 0;
- 147               	.LM7:
- 148 002c 16BC      		out 0x26,__zero_reg__
-  22:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     TCNT2 = 0;
- 150               	.LM8:
- 151 002e 1092 B200 		sts 178,__zero_reg__
- 152 0032 0895      		ret
- 154               	.Lscope1:
- 155               		.section	.text.startup,"ax",@progbits
- 157               	.global	main
- 159               	main:
-  23:/Users/sethpenna/Desktop/PWM/PWM/main.c **** }
-  24:/Users/sethpenna/Desktop/PWM/PWM/main.c **** 
-  25:/Users/sethpenna/Desktop/PWM/PWM/main.c **** 
-  26:/Users/sethpenna/Desktop/PWM/PWM/main.c **** int main(void)
-  27:/Users/sethpenna/Desktop/PWM/PWM/main.c **** {
- 161               	.LM9:
- 162               	.LFBB2:
- 163               	/* prologue: function */
- 164               	/* frame size = 0 */
- 165               	/* stack size = 0 */
- 166               	.L__stack_usage = 0
-  28:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     //Initialize PWM
-  29:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     pwm_init();
- 168               	.LM10:
- 169 0000 0E94 0000 		call pwm_init
-  30:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     
-  31:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     // OC0A is tied to pin PD6 (pin 12 on 328 chip)
-  32:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     // OC0B is tied to pin PD5 (pin 11 on 328 chip)
-  33:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     // OC2B is tied to pin PD3 (pin 5 on 328 chip)
-  34:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     DDRD |= (1 << PD6) | (1 << PD5) | (1 << PD3);
- 171               	.LM11:
- 172 0004 8AB1      		in r24,0xa
- 173 0006 8866      		ori r24,lo8(104)
- 174 0008 8AB9      		out 0xa,r24
-  35:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     
-  36:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     // Start all color channels off
-  37:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     OCR0A = 255;
- 176               	.LM12:
- 177 000a 8FEF      		ldi r24,lo8(-1)
- 178 000c 87BD      		out 0x27,r24
-  38:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     OCR0B = 255;
- 180               	.LM13:
- 181 000e 88BD      		out 0x28,r24
-  39:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     OCR2B = 255;
- 183               	.LM14:
- 184 0010 8093 B400 		sts 180,r24
- 185               	.L15:
- 186               	.LBB20:
-  40:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     
-  41:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     while(1)
-  42:/Users/sethpenna/Desktop/PWM/PWM/main.c ****     {
-  43:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         // fade green up
-  44:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         for (int i = 0; i < 256; i++)
- 188               	.LM15:
- 189 0014 80E0      		ldi r24,0
- 190 0016 90E0      		ldi r25,0
- 191               	.L3:
- 193               	.LM16:
- 194 0018 8F3F      		cpi r24,-1
- 195 001a 9105      		cpc r25,__zero_reg__
- 196 001c 01F0      		breq .+2
- 197 001e 04F4      		brge .L17
-  45:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         {
-  46:/Users/sethpenna/Desktop/PWM/PWM/main.c ****             OCR0A = (255-i);
- 199               	.LM17:
- 200 0020 282F      		mov r18,r24
- 201 0022 2095      		com r18
- 202 0024 27BD      		out 0x27,r18
- 203               	.LBB21:
- 204               	.LBB22:
- 206               	.Ltext1:
+ 101               		.section	.text.startup,"ax",@progbits
+ 103               	.global	main
+ 105               	main:
+   1:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** /* included header files - necessary for functions and defined pins */
+   2:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** #include <avr/io.h>
+   3:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** #include <avr/interrupt.h>
+   4:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** #include <util/delay.h>
+   5:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** 
+   6:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** void pwm_init(void);
+   7:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** 
+   8:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** 
+   9:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** int main(void)
+  10:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** {
+ 107               	.LM0:
+ 108               	.LFBB1:
+ 109               	/* prologue: function */
+ 110               	/* frame size = 0 */
+ 111               	/* stack size = 0 */
+ 112               	.L__stack_usage = 0
+  11:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     //Initialize PWM
+  12:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     //pwm_init();
+  13:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     
+  14:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     // OC0A is tied to pin PD6 (pin 12 on 328 chip)
+  15:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     // OC0B is tied to pin PD5 (pin 11 on 328 chip)
+  16:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     // OC2B is tied to pin PD3 (pin 5 on 328 chip)
+  17:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     // Set all three pins to output
+  18:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     DDRD |= (1 << PD6) | (1 << PD5) | (1 << PD3);
+ 114               	.LM1:
+ 115 0000 8AB1      		in r24,0xa
+ 116 0002 8866      		ori r24,lo8(104)
+ 117 0004 8AB9      		out 0xa,r24
+  19:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     
+  20:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     // Start all color channels off
+  21:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     OCR0A = 255;
+ 119               	.LM2:
+ 120 0006 8FEF      		ldi r24,lo8(-1)
+ 121 0008 87BD      		out 0x27,r24
+  22:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     OCR0B = 255;
+ 123               	.LM3:
+ 124 000a 88BD      		out 0x28,r24
+  23:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     OCR2B = 255;
+ 126               	.LM4:
+ 127 000c 8093 B400 		sts 180,r24
+ 128               	.L2:
+  24:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     
+  25:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     int delay_amount = 20; // milliseconds to delay between changing PWM values
+  26:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     
+  27:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     while(1)
+  28:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     {
+  29:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         
+  30:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         PORTD |= (1 << PD6);
+ 130               	.LM5:
+ 131 0010 5E9A      		sbi 0xb,6
+ 132               	.LBB6:
+ 133               	.LBB7:
+ 135               	.Ltext1:
    1:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** /* Copyright (c) 2002, Marek Michalkiewicz
    2:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    Copyright (c) 2004,2005,2007 Joerg Wunsch
    3:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    Copyright (c) 2007  Florin-Viorel Petrov
@@ -297,203 +225,155 @@
  161:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	#endif
  162:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
  163:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	__builtin_avr_delay_cycles(__ticks_dc);
- 208               	.LM18:
- 209 0026 E3EF      		ldi r30,lo8(499)
- 210 0028 F1E0      		ldi r31,hi8(499)
- 211 002a 3197      		1: sbiw r30,1
- 212 002c 01F4      		brne 1b
- 213 002e 00C0      		rjmp .
- 214 0030 0000      		nop
- 215               	.LBE22:
- 216               	.LBE21:
- 218               	.Ltext2:
-  44:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         for (int i = 0; i < 256; i++)
- 220               	.LM19:
- 221 0032 0196      		adiw r24,1
- 222 0034 00C0      		rjmp .L3
- 223               	.L17:
-  44:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         for (int i = 0; i < 256; i++)
- 225               	.LM20:
- 226 0036 80E0      		ldi r24,0
- 227 0038 90E0      		ldi r25,0
- 228               	.L6:
- 229               	.LBE20:
- 230               	.LBB23:
-  47:/Users/sethpenna/Desktop/PWM/PWM/main.c ****             _delay_ms(2);
-  48:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         }
-  49:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         // fade green down
-  50:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         for (int j = 255; j >= 0; j--)
-  51:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         {
-  52:/Users/sethpenna/Desktop/PWM/PWM/main.c ****             OCR0A = (255-j);
- 232               	.LM21:
- 233 003a 87BD      		out 0x27,r24
- 234               	.LBB24:
- 235               	.LBB25:
- 237               	.Ltext3:
- 239               	.LM22:
- 240 003c E3EF      		ldi r30,lo8(499)
- 241 003e F1E0      		ldi r31,hi8(499)
- 242 0040 3197      		1: sbiw r30,1
- 243 0042 01F4      		brne 1b
- 244 0044 00C0      		rjmp .
- 245 0046 0000      		nop
- 246 0048 0196      		adiw r24,1
- 247               	.LBE25:
- 248               	.LBE24:
- 250               	.Ltext4:
-  50:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         for (int j = 255; j >= 0; j--)
- 252               	.LM23:
- 253 004a 8115      		cp r24,__zero_reg__
- 254 004c F1E0      		ldi r31,1
- 255 004e 9F07      		cpc r25,r31
- 256 0050 01F4      		brne .L6
-  50:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         for (int j = 255; j >= 0; j--)
- 258               	.LM24:
- 259 0052 8FEF      		ldi r24,lo8(-1)
- 260 0054 90E0      		ldi r25,0
- 261               	.L8:
- 262               	.LBE23:
- 263               	.LBB26:
-  53:/Users/sethpenna/Desktop/PWM/PWM/main.c ****             _delay_ms(2);
-  54:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         }
-  55:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         
-  56:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         
-  57:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         //fade blue up
-  58:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         for (int i = 0; i < 256; i++)
-  59:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         {
-  60:/Users/sethpenna/Desktop/PWM/PWM/main.c ****             OCR0B = (255-i);
- 265               	.LM25:
- 266 0056 88BD      		out 0x28,r24
- 267               	.LBB27:
- 268               	.LBB28:
- 270               	.Ltext5:
- 272               	.LM26:
- 273 0058 E3EF      		ldi r30,lo8(499)
- 274 005a F1E0      		ldi r31,hi8(499)
- 275 005c 3197      		1: sbiw r30,1
- 276 005e 01F4      		brne 1b
- 277 0060 00C0      		rjmp .
- 278 0062 0000      		nop
- 279               	.LBE28:
- 280               	.LBE27:
- 281 0064 0197      		sbiw r24,1
- 282 0066 00F4      		brcc .L8
- 284               	.Ltext6:
-  58:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         for (int i = 0; i < 256; i++)
- 286               	.LM27:
- 287 0068 80E0      		ldi r24,0
- 288 006a 90E0      		ldi r25,0
- 289               	.L10:
- 290               	.LBE26:
- 291               	.LBB29:
-  61:/Users/sethpenna/Desktop/PWM/PWM/main.c ****             _delay_ms(2);
-  62:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         }
-  63:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         // fade blue down
-  64:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         for (int j = 255; j >= 0; j--)
-  65:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         {
-  66:/Users/sethpenna/Desktop/PWM/PWM/main.c ****             OCR0B = (255-j);
- 293               	.LM28:
- 294 006c 88BD      		out 0x28,r24
- 295               	.LBB30:
- 296               	.LBB31:
- 298               	.Ltext7:
- 300               	.LM29:
- 301 006e E3EF      		ldi r30,lo8(499)
- 302 0070 F1E0      		ldi r31,hi8(499)
- 303 0072 3197      		1: sbiw r30,1
- 304 0074 01F4      		brne 1b
- 305 0076 00C0      		rjmp .
- 306 0078 0000      		nop
- 307 007a 0196      		adiw r24,1
- 308               	.LBE31:
- 309               	.LBE30:
- 311               	.Ltext8:
-  64:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         for (int j = 255; j >= 0; j--)
- 313               	.LM30:
- 314 007c 8115      		cp r24,__zero_reg__
- 315 007e F1E0      		ldi r31,1
- 316 0080 9F07      		cpc r25,r31
- 317 0082 01F4      		brne .L10
-  64:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         for (int j = 255; j >= 0; j--)
- 319               	.LM31:
- 320 0084 8FEF      		ldi r24,lo8(-1)
- 321 0086 90E0      		ldi r25,0
- 322               	.L12:
- 323               	.LBE29:
- 324               	.LBB32:
-  67:/Users/sethpenna/Desktop/PWM/PWM/main.c ****             _delay_ms(2);
-  68:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         }
-  69:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         
-  70:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         //fade red up
-  71:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         for (int i = 0; i < 256; i++)
-  72:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         {
-  73:/Users/sethpenna/Desktop/PWM/PWM/main.c ****             OCR2B = (255-i);
- 326               	.LM32:
- 327 0088 8093 B400 		sts 180,r24
- 328               	.LBB33:
- 329               	.LBB34:
- 331               	.Ltext9:
- 333               	.LM33:
- 334 008c E3EF      		ldi r30,lo8(499)
- 335 008e F1E0      		ldi r31,hi8(499)
- 336 0090 3197      		1: sbiw r30,1
- 337 0092 01F4      		brne 1b
- 338 0094 00C0      		rjmp .
- 339 0096 0000      		nop
- 340               	.LBE34:
- 341               	.LBE33:
- 342 0098 0197      		sbiw r24,1
- 343 009a 00F4      		brcc .L12
- 345               	.Ltext10:
-  71:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         for (int i = 0; i < 256; i++)
- 347               	.LM34:
- 348 009c 80E0      		ldi r24,0
- 349 009e 90E0      		ldi r25,0
- 350               	.L14:
- 351               	.LBE32:
- 352               	.LBB35:
-  74:/Users/sethpenna/Desktop/PWM/PWM/main.c ****             _delay_ms(2);
-  75:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         }
-  76:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         // fade red down
-  77:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         for (int j = 255; j >= 0; j--)
-  78:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         {
-  79:/Users/sethpenna/Desktop/PWM/PWM/main.c ****             OCR2B = (255-j);
- 354               	.LM35:
- 355 00a0 8093 B400 		sts 180,r24
- 356               	.LBB36:
- 357               	.LBB37:
- 359               	.Ltext11:
- 361               	.LM36:
- 362 00a4 E3EF      		ldi r30,lo8(499)
- 363 00a6 F1E0      		ldi r31,hi8(499)
- 364 00a8 3197      		1: sbiw r30,1
- 365 00aa 01F4      		brne 1b
- 366 00ac 00C0      		rjmp .
- 367 00ae 0000      		nop
- 368 00b0 0196      		adiw r24,1
- 369               	.LBE37:
- 370               	.LBE36:
- 372               	.Ltext12:
-  77:/Users/sethpenna/Desktop/PWM/PWM/main.c ****         for (int j = 255; j >= 0; j--)
- 374               	.LM37:
- 375 00b2 8115      		cp r24,__zero_reg__
- 376 00b4 F1E0      		ldi r31,1
- 377 00b6 9F07      		cpc r25,r31
- 378 00b8 01F4      		brne .L14
- 379 00ba 00C0      		rjmp .L15
- 380               	.LBE35:
- 385               	.Lscope2:
- 386               		.text
- 388               	.Letext0:
- 389               		.ident	"GCC: (GNU) 4.8.1"
+ 137               	.LM6:
+ 138 0012 89EF      		ldi r24,lo8(249)
+ 139 0014 90E0      		ldi r25,hi8(249)
+ 140 0016 0197      		1: sbiw r24,1
+ 141 0018 01F4      		brne 1b
+ 142 001a 00C0      		rjmp .
+ 143 001c 0000      		nop
+ 144               	.LBE7:
+ 145               	.LBE6:
+ 147               	.Ltext2:
+  31:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         _delay_ms(1);
+  32:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         PORTD &= ~(1 << PD6);
+ 149               	.LM7:
+ 150 001e 5E98      		cbi 0xb,6
+ 151               	.LBB8:
+ 152               	.LBB9:
+ 154               	.Ltext3:
+ 156               	.LM8:
+ 157 0020 89EC      		ldi r24,lo8(2249)
+ 158 0022 98E0      		ldi r25,hi8(2249)
+ 159 0024 0197      		1: sbiw r24,1
+ 160 0026 01F4      		brne 1b
+ 161 0028 00C0      		rjmp .
+ 162 002a 0000      		nop
+ 163 002c 00C0      		rjmp .L2
+ 164               	.LBE9:
+ 165               	.LBE8:
+ 167               	.Lscope1:
+ 168               		.text
+ 170               	.global	pwm_init
+ 172               	pwm_init:
+ 174               	.Ltext4:
+  33:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         _delay_ms(9);
+  34:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         /*
+  35:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         // fade green up
+  36:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         for (int i = 0; i < 256; i++)
+  37:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         {
+  38:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             OCR0A = (255-i);
+  39:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             _delay_ms(delay_amount);
+  40:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         }
+  41:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         // fade green down
+  42:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         for (int j = 255; j >= 0; j--)
+  43:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         {
+  44:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             OCR0A = (255-j);
+  45:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             _delay_ms(delay_amount);
+  46:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         }
+  47:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****          */
+  48:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         
+  49:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         /*
+  50:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         //fade blue up
+  51:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         for (int i = 0; i < 256; i++)
+  52:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         {
+  53:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             OCR0B = (255-i);
+  54:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             _delay_ms(delay_amount);
+  55:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         }
+  56:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         // fade blue down
+  57:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         for (int j = 255; j >= 0; j--)
+  58:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         {
+  59:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             OCR0B = (255-j);
+  60:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             _delay_ms(delay_amount);
+  61:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         }
+  62:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         
+  63:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         //fade red up
+  64:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         for (int i = 0; i < 256; i++)
+  65:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         {
+  66:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             OCR2B = (255-i);
+  67:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             _delay_ms(delay_amount);
+  68:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         }
+  69:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         // fade red down
+  70:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         for (int j = 255; j >= 0; j--)
+  71:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         {
+  72:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             OCR2B = (255-j);
+  73:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             _delay_ms(delay_amount);
+  74:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         }
+  75:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****          */
+  76:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         
+  77:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     }
+  78:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** 
+  79:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** }
+  80:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** 
+  81:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** // Initialize PWM: set the mode for timers, configure settings
+  82:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** void pwm_init(void)
+  83:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** {
+ 176               	.LM9:
+ 177               	.LFBB2:
+ 178               	/* prologue: function */
+ 179               	/* frame size = 0 */
+ 180               	/* stack size = 0 */
+ 181               	.L__stack_usage = 0
+  84:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     // Fast PWM mode for timers 0 and 2 (p.106)
+  85:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     TCCR0A |= (1 << WGM01) | (1 << WGM00);
+ 183               	.LM10:
+ 184 0000 84B5      		in r24,0x24
+ 185 0002 8360      		ori r24,lo8(3)
+ 186 0004 84BD      		out 0x24,r24
+  86:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     TCCR2A |= (1 << WGM21) | (1 << WGM20);
+ 188               	.LM11:
+ 189 0006 E0EB      		ldi r30,lo8(-80)
+ 190 0008 F0E0      		ldi r31,0
+ 191 000a 8081      		ld r24,Z
+ 192 000c 8360      		ori r24,lo8(3)
+ 193 000e 8083      		st Z,r24
+  87:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     
+  88:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     // clear OC0A on compare match, set on BOTTOM (inverting) (p.104)
+  89:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     // 255 is fully off, 0 is fully on
+  90:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     TCCR0A |= (1 << COM0A1) | (1 << COM0A0) | (1 << COM0B1) | (1 << COM0B0); // set for A0 & B0
+ 195               	.LM12:
+ 196 0010 84B5      		in r24,0x24
+ 197 0012 806F      		ori r24,lo8(-16)
+ 198 0014 84BD      		out 0x24,r24
+  91:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     TCCR2A |= (1 << COM2B1) | (1 << COM2B0);
+ 200               	.LM13:
+ 201 0016 8081      		ld r24,Z
+ 202 0018 8063      		ori r24,lo8(48)
+ 203 001a 8083      		st Z,r24
+  92:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     
+  93:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     // Use clock directly, no prescaler (p.107)
+  94:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     TCCR0B |= (0 << CS02) | (0 << CS01) | (1 << CS00);
+ 205               	.LM14:
+ 206 001c 85B5      		in r24,0x25
+ 207 001e 8160      		ori r24,lo8(1)
+ 208 0020 85BD      		out 0x25,r24
+  95:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     TCCR2B |= (0 << CS22) | (0 << CS21) | (1 << CS20);
+ 210               	.LM15:
+ 211 0022 E1EB      		ldi r30,lo8(-79)
+ 212 0024 F0E0      		ldi r31,0
+ 213 0026 8081      		ld r24,Z
+ 214 0028 8160      		ori r24,lo8(1)
+ 215 002a 8083      		st Z,r24
+  96:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     
+  97:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     // initialize counter for TIMER 0 and TIMER 2 (p.108)
+  98:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     TCNT0 = 0;
+ 217               	.LM16:
+ 218 002c 16BC      		out 0x26,__zero_reg__
+  99:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     TCNT2 = 0;
+ 220               	.LM17:
+ 221 002e 1092 B200 		sts 178,__zero_reg__
+ 222 0032 0895      		ret
+ 224               	.Lscope2:
+ 226               	.Letext0:
+ 227               		.ident	"GCC: (GNU) 4.8.1"
 DEFINED SYMBOLS
                             *ABS*:00000000 main.c
-/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccu2hS99.s:2      *ABS*:0000003e __SP_H__
-/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccu2hS99.s:3      *ABS*:0000003d __SP_L__
-/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccu2hS99.s:4      *ABS*:0000003f __SREG__
-/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccu2hS99.s:5      *ABS*:00000000 __tmp_reg__
-/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccu2hS99.s:6      *ABS*:00000001 __zero_reg__
-/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccu2hS99.s:104    .text:00000000 pwm_init
-/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccu2hS99.s:159    .text.startup:00000000 main
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//cc6xiOOx.s:2      *ABS*:0000003e __SP_H__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//cc6xiOOx.s:3      *ABS*:0000003d __SP_L__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//cc6xiOOx.s:4      *ABS*:0000003f __SREG__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//cc6xiOOx.s:5      *ABS*:00000000 __tmp_reg__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//cc6xiOOx.s:6      *ABS*:00000001 __zero_reg__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//cc6xiOOx.s:105    .text.startup:00000000 main
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//cc6xiOOx.s:172    .text:00000000 pwm_init
 
 NO UNDEFINED SYMBOLS

@@ -6,26 +6,35 @@
 void pwm_init(void);
 
 
+// Pin Definitions (same for fruit and vegetable boards)
+#define RED_PIN     PD3
+#define GREEN_PIN   PD6
+#define BLUE_PIN    PD5
+#define ROT_A       PC0
+#define ROT_B       PC1
+#define BUTTON      PC3
+
 int main(void)
 {
     //Initialize PWM
-    pwm_init();
+    //pwm_init();
     
     // OC0A is tied to pin PD6 (pin 12 on 328 chip)
     // OC0B is tied to pin PD5 (pin 11 on 328 chip)
     // OC2B is tied to pin PD3 (pin 5 on 328 chip)
     // Set all three pins to output
-    DDRD |= (1 << PD6) | (1 << PD5) | (1 << PD3);
+    DDRD |= (1 << RED_PIN) | (1 << GREEN_PIN) | (1 << BLUE_PIN);
     
     // Start all color channels off
     OCR0A = 255;
     OCR0B = 255;
     OCR2B = 255;
     
-    int delay_amount = 2; // milliseconds to delay between changing PWM values
+    int delay_amount = 20; // milliseconds to delay between changing PWM values
     
     while(1)
     {
+        
         // fade green up
         for (int i = 0; i < 256; i++)
         {
@@ -38,6 +47,7 @@ int main(void)
             OCR0A = (255-j);
             _delay_ms(delay_amount);
         }
+        
         
         
         //fade blue up
@@ -65,6 +75,7 @@ int main(void)
             OCR2B = (255-j);
             _delay_ms(delay_amount);
         }
+        
         
     }
 

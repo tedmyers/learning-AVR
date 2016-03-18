@@ -1,0 +1,5 @@
+# Exclude personal Xcode user settings
+xcuserdata/
+
+# Exclude compiled files (.hex, .eep, etc.)
+Build/
