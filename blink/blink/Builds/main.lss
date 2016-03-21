@@ -71,7 +71,7 @@ int main(void)
 {
     
     // Set all three pins to output
-    DDRD |= (1 << RED_PIN) | (1 << GREEN_PIN) | (1 << BLUE_PIN);
+    LED_DDR |= (1 << RED_PIN) | (1 << GREEN_PIN) | (1 << BLUE_PIN);
   80:	8a b1       	in	r24, 0x0a	; 10
   82:	88 66       	ori	r24, 0x68	; 104
   84:	8a b9       	out	0x0a, r24	; 10

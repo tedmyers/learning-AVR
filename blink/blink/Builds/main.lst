@@ -14,7 +14,7 @@
    3:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** #include <avr/interrupt.h>
    4:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** #include <util/delay.h>
    5:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** 
-   6:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** void pwm_init(void);
+   6:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** //void pwm_init(void);
    7:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** 
    8:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** 
    9:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** // Pin Definitions (same for fruit and vegetable boards)
@@ -22,34 +22,35 @@
   11:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** #define GREEN_PIN   PD6
   12:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** #define BLUE_PIN    PD5
   13:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** #define LED_PORT    PORTD
-  14:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** #define ROT_A       PC0
-  15:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** #define ROT_B       PC1
-  16:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** #define BUTTON      PC3
-  17:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** 
-  18:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** int main(void)
-  19:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** {
+  14:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** #define LED_DDR     DDRD
+  15:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** #define ROT_A       PC0
+  16:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** #define ROT_B       PC1
+  17:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** #define BUTTON      PC3
+  18:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** 
+  19:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** int main(void)
+  20:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** {
  107               	.LM0:
  108               	.LFBB1:
  109               	/* prologue: function */
  110               	/* frame size = 0 */
  111               	/* stack size = 0 */
  112               	.L__stack_usage = 0
-  20:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     
-  21:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     // Set all three pins to output
-  22:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     DDRD |= (1 << RED_PIN) | (1 << GREEN_PIN) | (1 << BLUE_PIN);
+  21:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     
+  22:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     // Set all three pins to output
+  23:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     LED_DDR |= (1 << RED_PIN) | (1 << GREEN_PIN) | (1 << BLUE_PIN);
  114               	.LM1:
  115 0000 8AB1      		in r24,0xa
  116 0002 8866      		ori r24,lo8(104)
  117 0004 8AB9      		out 0xa,r24
  118               	.L2:
-  23:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     
-  24:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     int delay_amount = 1000;
-  25:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     
-  26:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     // loop forever
-  27:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     while(1)
-  28:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     {
-  29:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         // light red LED, then turn off
-  30:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         LED_PORT |= (1<<RED_PIN);
+  24:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     
+  25:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     int delay_amount = 1000;
+  26:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     
+  27:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     // loop forever
+  28:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     while(1)
+  29:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     {
+  30:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         // light red LED, then turn off
+  31:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         LED_PORT |= (1<<RED_PIN);
  120               	.LM2:
  121 0006 5B9A      		sbi 0xb,3
  122               	.LBB14:
@@ -231,8 +232,8 @@
  137               	.LBE15:
  138               	.LBE14:
  140               	.Ltext2:
-  31:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         _delay_ms(delay_amount);
-  32:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         LED_PORT &= ~(1<<RED_PIN);
+  32:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         _delay_ms(delay_amount);
+  33:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         LED_PORT &= ~(1<<RED_PIN);
  142               	.LM4:
  143 001a 5B98      		cbi 0xb,3
  144               	.LBB16:
@@ -251,10 +252,10 @@
  159               	.LBE17:
  160               	.LBE16:
  162               	.Ltext4:
-  33:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         _delay_ms(delay_amount);
-  34:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         
-  35:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         // light green LED, then turn off
-  36:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         LED_PORT |= (1<<GREEN_PIN);
+  34:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         _delay_ms(delay_amount);
+  35:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         
+  36:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         // light green LED, then turn off
+  37:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         LED_PORT |= (1<<GREEN_PIN);
  164               	.LM6:
  165 002e 5E9A      		sbi 0xb,6
  166               	.LBB18:
@@ -273,8 +274,8 @@
  181               	.LBE19:
  182               	.LBE18:
  184               	.Ltext6:
-  37:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         _delay_ms(delay_amount);
-  38:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         LED_PORT &= ~(1<<GREEN_PIN);
+  38:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         _delay_ms(delay_amount);
+  39:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         LED_PORT &= ~(1<<GREEN_PIN);
  186               	.LM8:
  187 0042 5E98      		cbi 0xb,6
  188               	.LBB20:
@@ -293,11 +294,11 @@
  203               	.LBE21:
  204               	.LBE20:
  206               	.Ltext8:
-  39:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         _delay_ms(delay_amount);
-  40:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         
+  40:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         _delay_ms(delay_amount);
   41:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         
-  42:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         // light blue LED, then turn off
-  43:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         LED_PORT |= (1<<BLUE_PIN);
+  42:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         
+  43:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         // light blue LED, then turn off
+  44:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         LED_PORT |= (1<<BLUE_PIN);
  208               	.LM10:
  209 0056 5D9A      		sbi 0xb,5
  210               	.LBB22:
@@ -316,8 +317,8 @@
  225               	.LBE23:
  226               	.LBE22:
  228               	.Ltext10:
-  44:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         _delay_ms(delay_amount);
-  45:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         LED_PORT &= ~(1<<BLUE_PIN);
+  45:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         _delay_ms(delay_amount);
+  46:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         LED_PORT &= ~(1<<BLUE_PIN);
  230               	.LM12:
  231 006a 5D98      		cbi 0xb,5
  232               	.LBB24:
@@ -342,11 +343,11 @@
  255               		.ident	"GCC: (GNU) 4.8.1"
 DEFINED SYMBOLS
                             *ABS*:00000000 main.c
-/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccGK8Pbu.s:2      *ABS*:0000003e __SP_H__
-/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccGK8Pbu.s:3      *ABS*:0000003d __SP_L__
-/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccGK8Pbu.s:4      *ABS*:0000003f __SREG__
-/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccGK8Pbu.s:5      *ABS*:00000000 __tmp_reg__
-/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccGK8Pbu.s:6      *ABS*:00000001 __zero_reg__
-/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccGK8Pbu.s:105    .text.startup:00000000 main
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccSWOCVm.s:2      *ABS*:0000003e __SP_H__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccSWOCVm.s:3      *ABS*:0000003d __SP_L__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccSWOCVm.s:4      *ABS*:0000003f __SREG__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccSWOCVm.s:5      *ABS*:00000000 __tmp_reg__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccSWOCVm.s:6      *ABS*:00000001 __zero_reg__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccSWOCVm.s:105    .text.startup:00000000 main
 
 NO UNDEFINED SYMBOLS

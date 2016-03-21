@@ -1,0 +1,94 @@
+   1               		.file	"main.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   8               		.text
+   9               	.Ltext0:
+ 101               		.section	.text.startup,"ax",@progbits
+ 103               	.global	main
+ 105               	main:
+   1:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c **** /* included header files - necessary for functions and defined pins */
+   2:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c **** #include <avr/io.h>
+   3:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c **** #include <avr/interrupt.h>
+   4:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c **** #include <util/delay.h>
+   5:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c **** 
+   6:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c **** void pwm_init(void);
+   7:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c **** // Note: change button pin for fruit/vegetable boards
+   8:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c **** 
+   9:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c **** // Pin Definitions (same for fruit and vegetable boards)
+  10:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c **** #define RED_PIN     PD3
+  11:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c **** #define GREEN_PIN   PD6
+  12:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c **** #define BLUE_PIN    PD5
+  13:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c **** #define LED_PORT    PORTD
+  14:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c **** #define LED_DDR     DDRD
+  15:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c **** #define ROT_A       PC0
+  16:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c **** #define ROT_B       PC1
+  17:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c **** #define BUTTON      PC3
+  18:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c **** #define BUTTON_PORT PORTC
+  19:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c **** #define BUTTON_DDR  DDRC
+  20:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c **** #define BUTTON_PIN  PINC
+  21:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c **** 
+  22:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c **** int main(void)
+  23:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c **** {
+ 107               	.LM0:
+ 108               	.LFBB1:
+ 109               	/* prologue: function */
+ 110               	/* frame size = 0 */
+ 111               	/* stack size = 0 */
+ 112               	.L__stack_usage = 0
+  24:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c ****     
+  25:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c ****     // Set all three pins to output
+  26:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c ****     LED_DDR |= (1 << RED_PIN) | (1 << GREEN_PIN) | (1 << BLUE_PIN);
+ 114               	.LM1:
+ 115 0000 8AB1      		in r24,0xa
+ 116 0002 8866      		ori r24,lo8(104)
+ 117 0004 8AB9      		out 0xa,r24
+  27:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c ****     
+  28:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c ****     // Set Button to input
+  29:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c ****     BUTTON_DDR &= ~(1<<BUTTON);
+ 119               	.LM2:
+ 120 0006 3B98      		cbi 0x7,3
+  30:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c ****     
+  31:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c ****     // Set internal pull-up resistor
+  32:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c ****     BUTTON_PORT |= (1<<BUTTON);
+ 122               	.LM3:
+ 123 0008 439A      		sbi 0x8,3
+ 124               	.L2:
+  33:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c ****     // (same as PORTC |= (1<<3) )
+  34:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c ****     
+  35:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c ****     while (1)
+  36:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c ****     {
+  37:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c ****         if ( (BUTTON_PIN & (1<<BUTTON)) == 0 )
+ 126               	.LM4:
+ 127 000a 3399      		sbic 0x6,3
+ 128 000c 00C0      		rjmp .L3
+  38:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c ****             LED_PORT |= (1<<RED_PIN) | (1<<BLUE_PIN) | (1<<GREEN_PIN);
+ 130               	.LM5:
+ 131 000e 8BB1      		in r24,0xb
+ 132 0010 8866      		ori r24,lo8(104)
+ 133 0012 00C0      		rjmp .L5
+ 134               	.L3:
+  39:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c ****         else
+  40:/Users/tedmyers/GitHub/learning-AVR/simple_button/simple_button/main.c ****             LED_PORT &= ~( (1<<RED_PIN) | (1<<BLUE_PIN) | (1<<GREEN_PIN) );
+ 136               	.LM6:
+ 137 0014 8BB1      		in r24,0xb
+ 138 0016 8779      		andi r24,lo8(-105)
+ 139               	.L5:
+ 140 0018 8BB9      		out 0xb,r24
+ 141 001a 00C0      		rjmp .L2
+ 143               	.Lscope1:
+ 144               		.text
+ 146               	.Letext0:
+ 147               		.ident	"GCC: (GNU) 4.8.1"
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccS9G9Pm.s:2      *ABS*:0000003e __SP_H__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccS9G9Pm.s:3      *ABS*:0000003d __SP_L__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccS9G9Pm.s:4      *ABS*:0000003f __SREG__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccS9G9Pm.s:5      *ABS*:00000000 __tmp_reg__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccS9G9Pm.s:6      *ABS*:00000001 __zero_reg__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccS9G9Pm.s:105    .text.startup:00000000 main
+
+NO UNDEFINED SYMBOLS

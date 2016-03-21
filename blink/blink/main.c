@@ -3,7 +3,7 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
-void pwm_init(void);
+//void pwm_init(void);
 
 
 // Pin Definitions (same for fruit and vegetable boards)
@@ -11,6 +11,7 @@ void pwm_init(void);
 #define GREEN_PIN   PD6
 #define BLUE_PIN    PD5
 #define LED_PORT    PORTD
+#define LED_DDR     DDRD
 #define ROT_A       PC0
 #define ROT_B       PC1
 #define BUTTON      PC3
@@ -19,7 +20,7 @@ int main(void)
 {
     
     // Set all three pins to output
-    DDRD |= (1 << RED_PIN) | (1 << GREEN_PIN) | (1 << BLUE_PIN);
+    LED_DDR |= (1 << RED_PIN) | (1 << GREEN_PIN) | (1 << BLUE_PIN);
     
     int delay_amount = 1000;
     
