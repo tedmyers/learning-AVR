@@ -9,82 +9,52 @@
  101               		.section	.text.startup,"ax",@progbits
  103               	.global	main
  105               	main:
-   1:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** /* included header files - necessary for functions and defined pins */
-   2:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** #include <avr/io.h>
-   3:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** #include <avr/interrupt.h>
-   4:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** #include <util/delay.h>
-   5:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** 
-   6:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** void pwm_init(void);
-   7:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** 
-   8:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** 
-   9:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** // Pin Definitions (same for fruit and vegetable boards)
-  10:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** #define RED_PIN     PD3
-  11:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** #define GREEN_PIN   PD6
-  12:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** #define BLUE_PIN    PD5
-  13:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** #define ROT_A       PC0
-  14:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** #define ROT_B       PC1
-  15:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** #define BUTTON      PC3
-  16:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** 
-  17:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** int main(void)
-  18:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** {
+   1:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** /* included header files - necessary for functions and defined pins */
+   2:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** #include <avr/io.h>
+   3:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** #include <avr/interrupt.h>
+   4:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** #include <util/delay.h>
+   5:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** 
+   6:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** void pwm_init(void);
+   7:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** 
+   8:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** 
+   9:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** // Pin Definitions (same for fruit and vegetable boards)
+  10:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** #define RED_PIN     PD3
+  11:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** #define GREEN_PIN   PD6
+  12:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** #define BLUE_PIN    PD5
+  13:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** #define LED_PORT    PORTD
+  14:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** #define ROT_A       PC0
+  15:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** #define ROT_B       PC1
+  16:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** #define BUTTON      PC3
+  17:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** 
+  18:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** int main(void)
+  19:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c **** {
  107               	.LM0:
  108               	.LFBB1:
  109               	/* prologue: function */
  110               	/* frame size = 0 */
  111               	/* stack size = 0 */
  112               	.L__stack_usage = 0
-  19:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     //Initialize PWM
-  20:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     //pwm_init();
-  21:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     
-  22:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     // OC0A is tied to pin PD6 (pin 12 on 328 chip)
-  23:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     // OC0B is tied to pin PD5 (pin 11 on 328 chip)
-  24:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     // OC2B is tied to pin PD3 (pin 5 on 328 chip)
-  25:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     // Set all three pins to output
-  26:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     DDRD |= (1 << RED_PIN) | (1 << GREEN_PIN) | (1 << BLUE_PIN);
+  20:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     
+  21:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     // Set all three pins to output
+  22:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     DDRD |= (1 << RED_PIN) | (1 << GREEN_PIN) | (1 << BLUE_PIN);
  114               	.LM1:
  115 0000 8AB1      		in r24,0xa
  116 0002 8866      		ori r24,lo8(104)
  117 0004 8AB9      		out 0xa,r24
-  27:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     
-  28:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     // Start all color channels off
-  29:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     OCR0A = 255;
- 119               	.LM2:
- 120 0006 8FEF      		ldi r24,lo8(-1)
- 121 0008 87BD      		out 0x27,r24
-  30:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     OCR0B = 255;
- 123               	.LM3:
- 124 000a 88BD      		out 0x28,r24
-  31:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     OCR2B = 255;
- 126               	.LM4:
- 127 000c 8093 B400 		sts 180,r24
- 128               	.L14:
- 129               	.LBB20:
-  32:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     
-  33:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     int delay_amount = 20; // milliseconds to delay between changing PWM values
-  34:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     
-  35:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     while(1)
-  36:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     {
-  37:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         
-  38:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         // fade green up
-  39:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         for (int i = 0; i < 256; i++)
- 131               	.LM5:
- 132 0010 80E0      		ldi r24,0
- 133 0012 90E0      		ldi r25,0
- 134               	.L2:
- 136               	.LM6:
- 137 0014 8F3F      		cpi r24,-1
- 138 0016 9105      		cpc r25,__zero_reg__
- 139 0018 01F0      		breq .+2
- 140 001a 04F4      		brge .L16
-  40:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         {
-  41:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             OCR0A = (255-i);
- 142               	.LM7:
- 143 001c 282F      		mov r18,r24
- 144 001e 2095      		com r18
- 145 0020 27BD      		out 0x27,r18
- 146               	.LBB21:
- 147               	.LBB22:
- 149               	.Ltext1:
+ 118               	.L2:
+  23:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     
+  24:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     int delay_amount = 1000;
+  25:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     
+  26:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     // loop forever
+  27:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     while(1)
+  28:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****     {
+  29:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         // light red LED, then turn off
+  30:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         LED_PORT |= (1<<RED_PIN);
+ 120               	.LM2:
+ 121 0006 5B9A      		sbi 0xb,3
+ 122               	.LBB14:
+ 123               	.LBB15:
+ 125               	.Ltext1:
    1:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** /* Copyright (c) 2002, Marek Michalkiewicz
    2:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    Copyright (c) 2004,2005,2007 Joerg Wunsch
    3:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    Copyright (c) 2007  Florin-Viorel Petrov
@@ -248,273 +218,135 @@
  161:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	#endif
  162:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
  163:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	__builtin_avr_delay_cycles(__ticks_dc);
- 151               	.LM8:
- 152 0022 E7E8      		ldi r30,lo8(4999)
- 153 0024 F3E1      		ldi r31,hi8(4999)
- 154 0026 3197      		1: sbiw r30,1
- 155 0028 01F4      		brne 1b
- 156 002a 00C0      		rjmp .
- 157 002c 0000      		nop
- 158               	.LBE22:
- 159               	.LBE21:
- 161               	.Ltext2:
-  39:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         for (int i = 0; i < 256; i++)
- 163               	.LM9:
- 164 002e 0196      		adiw r24,1
- 165 0030 00C0      		rjmp .L2
- 166               	.L16:
-  39:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         for (int i = 0; i < 256; i++)
- 168               	.LM10:
- 169 0032 80E0      		ldi r24,0
- 170 0034 90E0      		ldi r25,0
- 171               	.L5:
- 172               	.LBE20:
- 173               	.LBB23:
-  42:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             _delay_ms(delay_amount);
-  43:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         }
-  44:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         // fade green down
-  45:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         for (int j = 255; j >= 0; j--)
-  46:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         {
-  47:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             OCR0A = (255-j);
- 175               	.LM11:
- 176 0036 87BD      		out 0x27,r24
- 177               	.LBB24:
- 178               	.LBB25:
- 180               	.Ltext3:
- 182               	.LM12:
- 183 0038 E7E8      		ldi r30,lo8(4999)
- 184 003a F3E1      		ldi r31,hi8(4999)
- 185 003c 3197      		1: sbiw r30,1
- 186 003e 01F4      		brne 1b
- 187 0040 00C0      		rjmp .
- 188 0042 0000      		nop
- 189 0044 0196      		adiw r24,1
- 190               	.LBE25:
- 191               	.LBE24:
- 193               	.Ltext4:
-  45:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         for (int j = 255; j >= 0; j--)
- 195               	.LM13:
- 196 0046 8115      		cp r24,__zero_reg__
- 197 0048 F1E0      		ldi r31,1
- 198 004a 9F07      		cpc r25,r31
- 199 004c 01F4      		brne .L5
-  45:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         for (int j = 255; j >= 0; j--)
- 201               	.LM14:
- 202 004e 8FEF      		ldi r24,lo8(-1)
- 203 0050 90E0      		ldi r25,0
- 204               	.L7:
- 205               	.LBE23:
- 206               	.LBB26:
-  48:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             _delay_ms(delay_amount);
-  49:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         }
-  50:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         
-  51:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         
-  52:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         
-  53:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         //fade blue up
-  54:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         for (int i = 0; i < 256; i++)
-  55:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         {
-  56:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             OCR0B = (255-i);
- 208               	.LM15:
- 209 0052 88BD      		out 0x28,r24
- 210               	.LBB27:
- 211               	.LBB28:
- 213               	.Ltext5:
- 215               	.LM16:
- 216 0054 E7E8      		ldi r30,lo8(4999)
- 217 0056 F3E1      		ldi r31,hi8(4999)
- 218 0058 3197      		1: sbiw r30,1
- 219 005a 01F4      		brne 1b
- 220 005c 00C0      		rjmp .
- 221 005e 0000      		nop
- 222               	.LBE28:
- 223               	.LBE27:
- 224 0060 0197      		sbiw r24,1
- 225 0062 00F4      		brcc .L7
- 227               	.Ltext6:
-  54:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         for (int i = 0; i < 256; i++)
- 229               	.LM17:
- 230 0064 80E0      		ldi r24,0
- 231 0066 90E0      		ldi r25,0
- 232               	.L9:
- 233               	.LBE26:
- 234               	.LBB29:
-  57:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             _delay_ms(delay_amount);
-  58:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         }
-  59:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         // fade blue down
-  60:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         for (int j = 255; j >= 0; j--)
-  61:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         {
-  62:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             OCR0B = (255-j);
- 236               	.LM18:
- 237 0068 88BD      		out 0x28,r24
- 238               	.LBB30:
- 239               	.LBB31:
- 241               	.Ltext7:
- 243               	.LM19:
- 244 006a E7E8      		ldi r30,lo8(4999)
- 245 006c F3E1      		ldi r31,hi8(4999)
- 246 006e 3197      		1: sbiw r30,1
- 247 0070 01F4      		brne 1b
- 248 0072 00C0      		rjmp .
- 249 0074 0000      		nop
- 250 0076 0196      		adiw r24,1
- 251               	.LBE31:
- 252               	.LBE30:
- 254               	.Ltext8:
-  60:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         for (int j = 255; j >= 0; j--)
- 256               	.LM20:
- 257 0078 8115      		cp r24,__zero_reg__
- 258 007a F1E0      		ldi r31,1
- 259 007c 9F07      		cpc r25,r31
- 260 007e 01F4      		brne .L9
-  60:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         for (int j = 255; j >= 0; j--)
- 262               	.LM21:
- 263 0080 8FEF      		ldi r24,lo8(-1)
- 264 0082 90E0      		ldi r25,0
- 265               	.L11:
- 266               	.LBE29:
- 267               	.LBB32:
-  63:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             _delay_ms(delay_amount);
-  64:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         }
-  65:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         
-  66:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         //fade red up
-  67:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         for (int i = 0; i < 256; i++)
-  68:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         {
-  69:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             OCR2B = (255-i);
- 269               	.LM22:
- 270 0084 8093 B400 		sts 180,r24
- 271               	.LBB33:
- 272               	.LBB34:
- 274               	.Ltext9:
- 276               	.LM23:
- 277 0088 E7E8      		ldi r30,lo8(4999)
- 278 008a F3E1      		ldi r31,hi8(4999)
- 279 008c 3197      		1: sbiw r30,1
- 280 008e 01F4      		brne 1b
- 281 0090 00C0      		rjmp .
- 282 0092 0000      		nop
- 283               	.LBE34:
- 284               	.LBE33:
- 285 0094 0197      		sbiw r24,1
- 286 0096 00F4      		brcc .L11
- 288               	.Ltext10:
-  67:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         for (int i = 0; i < 256; i++)
- 290               	.LM24:
- 291 0098 80E0      		ldi r24,0
- 292 009a 90E0      		ldi r25,0
- 293               	.L13:
- 294               	.LBE32:
- 295               	.LBB35:
-  70:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             _delay_ms(delay_amount);
-  71:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         }
-  72:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         // fade red down
-  73:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         for (int j = 255; j >= 0; j--)
-  74:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         {
-  75:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             OCR2B = (255-j);
- 297               	.LM25:
- 298 009c 8093 B400 		sts 180,r24
- 299               	.LBB36:
- 300               	.LBB37:
- 302               	.Ltext11:
- 304               	.LM26:
- 305 00a0 E7E8      		ldi r30,lo8(4999)
- 306 00a2 F3E1      		ldi r31,hi8(4999)
- 307 00a4 3197      		1: sbiw r30,1
- 308 00a6 01F4      		brne 1b
- 309 00a8 00C0      		rjmp .
- 310 00aa 0000      		nop
- 311 00ac 0196      		adiw r24,1
- 312               	.LBE37:
- 313               	.LBE36:
- 315               	.Ltext12:
-  73:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         for (int j = 255; j >= 0; j--)
- 317               	.LM27:
- 318 00ae 8115      		cp r24,__zero_reg__
- 319 00b0 F1E0      		ldi r31,1
- 320 00b2 9F07      		cpc r25,r31
- 321 00b4 01F4      		brne .L13
- 322 00b6 00C0      		rjmp .L14
- 323               	.LBE35:
- 328               	.Lscope1:
- 329               		.text
- 331               	.global	pwm_init
- 333               	pwm_init:
-  76:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****             _delay_ms(delay_amount);
-  77:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         }
-  78:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         
-  79:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****         
-  80:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     }
-  81:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** 
-  82:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** }
-  83:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** 
-  84:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** // Initialize PWM: set the mode for timers, configure settings
-  85:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** void pwm_init(void)
-  86:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c **** {
- 335               	.LM28:
- 336               	.LFBB2:
- 337               	/* prologue: function */
- 338               	/* frame size = 0 */
- 339               	/* stack size = 0 */
- 340               	.L__stack_usage = 0
-  87:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     // Fast PWM mode for timers 0 and 2 (p.106)
-  88:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     TCCR0A |= (1 << WGM01) | (1 << WGM00);
- 342               	.LM29:
- 343 0000 84B5      		in r24,0x24
- 344 0002 8360      		ori r24,lo8(3)
- 345 0004 84BD      		out 0x24,r24
-  89:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     TCCR2A |= (1 << WGM21) | (1 << WGM20);
- 347               	.LM30:
- 348 0006 E0EB      		ldi r30,lo8(-80)
- 349 0008 F0E0      		ldi r31,0
- 350 000a 8081      		ld r24,Z
- 351 000c 8360      		ori r24,lo8(3)
- 352 000e 8083      		st Z,r24
-  90:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     
-  91:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     // clear OC0A on compare match, set on BOTTOM (inverting) (p.104)
-  92:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     // 255 is fully off, 0 is fully on
-  93:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     TCCR0A |= (1 << COM0A1) | (1 << COM0A0) | (1 << COM0B1) | (1 << COM0B0); // set for A0 & B0
- 354               	.LM31:
- 355 0010 84B5      		in r24,0x24
- 356 0012 806F      		ori r24,lo8(-16)
- 357 0014 84BD      		out 0x24,r24
-  94:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     TCCR2A |= (1 << COM2B1) | (1 << COM2B0);
- 359               	.LM32:
- 360 0016 8081      		ld r24,Z
- 361 0018 8063      		ori r24,lo8(48)
- 362 001a 8083      		st Z,r24
-  95:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     
-  96:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     // Use clock directly, no prescaler (p.107)
-  97:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     TCCR0B |= (0 << CS02) | (0 << CS01) | (1 << CS00);
- 364               	.LM33:
- 365 001c 85B5      		in r24,0x25
- 366 001e 8160      		ori r24,lo8(1)
- 367 0020 85BD      		out 0x25,r24
-  98:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     TCCR2B |= (0 << CS22) | (0 << CS21) | (1 << CS20);
- 369               	.LM34:
- 370 0022 E1EB      		ldi r30,lo8(-79)
- 371 0024 F0E0      		ldi r31,0
- 372 0026 8081      		ld r24,Z
- 373 0028 8160      		ori r24,lo8(1)
- 374 002a 8083      		st Z,r24
-  99:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     
- 100:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     // initialize counter for TIMER 0 and TIMER 2 (p.108)
- 101:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     TCNT0 = 0;
- 376               	.LM35:
- 377 002c 16BC      		out 0x26,__zero_reg__
- 102:/Users/tedmyers/GitHub/learning-AVR/PWM/PWM/main.c ****     TCNT2 = 0;
- 379               	.LM36:
- 380 002e 1092 B200 		sts 178,__zero_reg__
- 381 0032 0895      		ret
- 383               	.Lscope2:
- 385               	.Letext0:
- 386               		.ident	"GCC: (GNU) 4.8.1"
+ 127               	.LM3:
+ 128 0008 2FE3      		ldi r18,lo8(199999)
+ 129 000a 8DE0      		ldi r24,hi8(199999)
+ 130 000c 93E0      		ldi r25,hlo8(199999)
+ 131 000e 2150      		1: subi r18,1
+ 132 0010 8040      		sbci r24,0
+ 133 0012 9040      		sbci r25,0
+ 134 0014 01F4      		brne 1b
+ 135 0016 00C0      		rjmp .
+ 136 0018 0000      		nop
+ 137               	.LBE15:
+ 138               	.LBE14:
+ 140               	.Ltext2:
+  31:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         _delay_ms(delay_amount);
+  32:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         LED_PORT &= ~(1<<RED_PIN);
+ 142               	.LM4:
+ 143 001a 5B98      		cbi 0xb,3
+ 144               	.LBB16:
+ 145               	.LBB17:
+ 147               	.Ltext3:
+ 149               	.LM5:
+ 150 001c 2FE3      		ldi r18,lo8(199999)
+ 151 001e 8DE0      		ldi r24,hi8(199999)
+ 152 0020 93E0      		ldi r25,hlo8(199999)
+ 153 0022 2150      		1: subi r18,1
+ 154 0024 8040      		sbci r24,0
+ 155 0026 9040      		sbci r25,0
+ 156 0028 01F4      		brne 1b
+ 157 002a 00C0      		rjmp .
+ 158 002c 0000      		nop
+ 159               	.LBE17:
+ 160               	.LBE16:
+ 162               	.Ltext4:
+  33:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         _delay_ms(delay_amount);
+  34:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         
+  35:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         // light green LED, then turn off
+  36:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         LED_PORT |= (1<<GREEN_PIN);
+ 164               	.LM6:
+ 165 002e 5E9A      		sbi 0xb,6
+ 166               	.LBB18:
+ 167               	.LBB19:
+ 169               	.Ltext5:
+ 171               	.LM7:
+ 172 0030 2FE3      		ldi r18,lo8(199999)
+ 173 0032 8DE0      		ldi r24,hi8(199999)
+ 174 0034 93E0      		ldi r25,hlo8(199999)
+ 175 0036 2150      		1: subi r18,1
+ 176 0038 8040      		sbci r24,0
+ 177 003a 9040      		sbci r25,0
+ 178 003c 01F4      		brne 1b
+ 179 003e 00C0      		rjmp .
+ 180 0040 0000      		nop
+ 181               	.LBE19:
+ 182               	.LBE18:
+ 184               	.Ltext6:
+  37:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         _delay_ms(delay_amount);
+  38:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         LED_PORT &= ~(1<<GREEN_PIN);
+ 186               	.LM8:
+ 187 0042 5E98      		cbi 0xb,6
+ 188               	.LBB20:
+ 189               	.LBB21:
+ 191               	.Ltext7:
+ 193               	.LM9:
+ 194 0044 2FE3      		ldi r18,lo8(199999)
+ 195 0046 8DE0      		ldi r24,hi8(199999)
+ 196 0048 93E0      		ldi r25,hlo8(199999)
+ 197 004a 2150      		1: subi r18,1
+ 198 004c 8040      		sbci r24,0
+ 199 004e 9040      		sbci r25,0
+ 200 0050 01F4      		brne 1b
+ 201 0052 00C0      		rjmp .
+ 202 0054 0000      		nop
+ 203               	.LBE21:
+ 204               	.LBE20:
+ 206               	.Ltext8:
+  39:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         _delay_ms(delay_amount);
+  40:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         
+  41:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         
+  42:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         // light blue LED, then turn off
+  43:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         LED_PORT |= (1<<BLUE_PIN);
+ 208               	.LM10:
+ 209 0056 5D9A      		sbi 0xb,5
+ 210               	.LBB22:
+ 211               	.LBB23:
+ 213               	.Ltext9:
+ 215               	.LM11:
+ 216 0058 2FE3      		ldi r18,lo8(199999)
+ 217 005a 8DE0      		ldi r24,hi8(199999)
+ 218 005c 93E0      		ldi r25,hlo8(199999)
+ 219 005e 2150      		1: subi r18,1
+ 220 0060 8040      		sbci r24,0
+ 221 0062 9040      		sbci r25,0
+ 222 0064 01F4      		brne 1b
+ 223 0066 00C0      		rjmp .
+ 224 0068 0000      		nop
+ 225               	.LBE23:
+ 226               	.LBE22:
+ 228               	.Ltext10:
+  44:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         _delay_ms(delay_amount);
+  45:/Users/tedmyers/GitHub/learning-AVR/blink/blink/main.c ****         LED_PORT &= ~(1<<BLUE_PIN);
+ 230               	.LM12:
+ 231 006a 5D98      		cbi 0xb,5
+ 232               	.LBB24:
+ 233               	.LBB25:
+ 235               	.Ltext11:
+ 237               	.LM13:
+ 238 006c 2FE3      		ldi r18,lo8(199999)
+ 239 006e 8DE0      		ldi r24,hi8(199999)
+ 240 0070 93E0      		ldi r25,hlo8(199999)
+ 241 0072 2150      		1: subi r18,1
+ 242 0074 8040      		sbci r24,0
+ 243 0076 9040      		sbci r25,0
+ 244 0078 01F4      		brne 1b
+ 245 007a 00C0      		rjmp .
+ 246 007c 0000      		nop
+ 247 007e 00C0      		rjmp .L2
+ 248               	.LBE25:
+ 249               	.LBE24:
+ 251               	.Lscope1:
+ 252               		.text
+ 254               	.Letext0:
+ 255               		.ident	"GCC: (GNU) 4.8.1"
 DEFINED SYMBOLS
                             *ABS*:00000000 main.c
-/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccNSp4oA.s:2      *ABS*:0000003e __SP_H__
-/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccNSp4oA.s:3      *ABS*:0000003d __SP_L__
-/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccNSp4oA.s:4      *ABS*:0000003f __SREG__
-/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccNSp4oA.s:5      *ABS*:00000000 __tmp_reg__
-/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccNSp4oA.s:6      *ABS*:00000001 __zero_reg__
-/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccNSp4oA.s:105    .text.startup:00000000 main
-/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccNSp4oA.s:333    .text:00000000 pwm_init
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccGK8Pbu.s:2      *ABS*:0000003e __SP_H__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccGK8Pbu.s:3      *ABS*:0000003d __SP_L__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccGK8Pbu.s:4      *ABS*:0000003f __SREG__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccGK8Pbu.s:5      *ABS*:00000000 __tmp_reg__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccGK8Pbu.s:6      *ABS*:00000001 __zero_reg__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccGK8Pbu.s:105    .text.startup:00000000 main
 
 NO UNDEFINED SYMBOLS

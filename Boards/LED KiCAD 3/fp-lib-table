@@ -1,0 +1,8 @@
+(fp_lib_table
+  (lib (name RGB_LED_footprints)(type KiCad)(uri "$(KIPRJMOD)\\RGB_LED_footprints.pretty")(options "")(descr ""))
+  (lib (name LED_new)(type KiCad)(uri C:\Users\mathm_000\Downloads\LEDs.pretty-master\LED_new.pretty)(options "")(descr ""))
+  (lib (name Part)(type KiCad)(uri "$(KIPRJMOD)\\Part.pretty")(options "")(descr ""))
+  (lib (name again)(type KiCad)(uri "$(KIPRJMOD)\\again.pretty")(options "")(descr ""))
+  (lib (name please)(type KiCad)(uri "$(KIPRJMOD)\\please.pretty")(options "")(descr ""))
+  (lib (name Screw_Terminal)(type KiCad)(uri "$(KIPRJMOD)\\Screw_Terminal.pretty")(options "")(descr ""))
+)

@@ -117,7 +117,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x170
+.text           0x00000000      0x104
  *(.vectors)
  .vectors       0x00000000       0x68 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr5/crtm328p.o
                 0x00000000                __vectors
@@ -196,31 +196,30 @@ END GROUP
                 0x0000007c                __vector_16
                 0x0000007c                __vector_18
                 0x0000007c                __vector_22
- .text          0x00000080       0x34 Builds/main.o
-                0x00000080                pwm_init
- .text          0x000000b4        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
-                0x000000b4                . = ALIGN (0x2)
+ .text          0x00000080        0x0 Builds/main.o
+ .text          0x00000080        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+                0x00000080                . = ALIGN (0x2)
  *(.text.*)
- .text.startup  0x000000b4       0xb8 Builds/main.o
-                0x000000b4                main
+ .text.startup  0x00000080       0x80 Builds/main.o
+                0x00000080                main
  .text.libgcc.mul
-                0x0000016c        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+                0x00000100        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  .text.libgcc.div
-                0x0000016c        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
- .text.libgcc   0x0000016c        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+                0x00000100        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+ .text.libgcc   0x00000100        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  .text.libgcc.prologue
-                0x0000016c        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+                0x00000100        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  .text.libgcc.builtins
-                0x0000016c        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+                0x00000100        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  .text.libgcc.fmul
-                0x0000016c        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+                0x00000100        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  .text.libgcc.fixed
-                0x0000016c        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
-                0x0000016c                . = ALIGN (0x2)
+                0x00000100        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+                0x00000100                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x0000016c        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
-                0x0000016c                exit
-                0x0000016c                _exit
+ .fini9         0x00000100        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+                0x00000100                exit
+                0x00000100                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -239,11 +238,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x0000016c        0x4 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+ .fini0         0x00000100        0x4 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  *(.fini0)
-                0x00000170                _etext = .
+                0x00000104                _etext = .
 
-.data           0x00800100        0x0 load address 0x00000170
+.data           0x00800100        0x0 load address 0x00000104
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800100        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr5/crtm328p.o
@@ -266,8 +265,8 @@ END GROUP
  *(.bss*)
  *(COMMON)
                 0x00800100                PROVIDE (__bss_end, .)
-                0x00000170                __data_load_start = LOADADDR (.data)
-                0x00000170                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x00000104                __data_load_start = LOADADDR (.data)
+                0x00000104                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x00800100        0x0
                 0x00800100                PROVIDE (__noinit_start, .)
@@ -295,13 +294,13 @@ END GROUP
 .user_signatures
  *(.user_signatures*)
 
-.stab           0x00000000      0x6f0
+.stab           0x00000000      0x5a0
  *(.stab)
- .stab          0x00000000      0x6f0 Builds/main.o
+ .stab          0x00000000      0x5a0 Builds/main.o
 
-.stabstr        0x00000000      0xc41
+.stabstr        0x00000000      0xc2b
  *(.stabstr)
- .stabstr       0x00000000      0xc41 Builds/main.o
+ .stabstr       0x00000000      0xc2b Builds/main.o
 
 .stab.excl
  *(.stab.excl)
@@ -415,4 +414,3 @@ exit                                              /usr/local/CrossPack-AVR-20131
                                                   /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr5/crtm328p.o
 main                                              Builds/main.o
                                                   /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr5/crtm328p.o
-pwm_init                                          Builds/main.o
