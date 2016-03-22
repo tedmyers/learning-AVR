@@ -5,6 +5,11 @@
 volatile uint8_t knob1_value = 0;
 volatile uint8_t portchistory = 0;
 
+//Set to PC3 and PCINT11 for fruit
+//Set to PC5 and PCINT13 for vegetable
+#define button PC5
+#define button_interrupt PCINT13
+
 //PCINT1 interrupt
 ISR(PCINT1_vect)
 {
@@ -36,10 +41,10 @@ ISR(PCINT1_vect)
         }
     }
     
-    else if(changedbits & _BV(PC5) && ((PINC & _BV(PC5)) == 0)){
+    else if(changedbits & _BV(button) && ((PINC & _BV(button)) == 0)){
         /*Button Pressed*/
         
-        //Turn on other LED while pressed
+        //Toggles LED when pressed
         PORTD ^= (1 << PD5);
     }
 }
@@ -68,13 +73,13 @@ void IO_init(void){
     PORTC |= (1 << PCINT8)|(1 << PCINT9);  //enable pullups
     
     //Set PC5 as input with pullup
-    DDRC &= ~(1 << PC5);
-    PORTC |= (1 << PC5);
+    DDRC &= ~(1 << button);
+    PORTC |= (1 << button);
     
     //enable PCINT1 interrupt signal
     PCICR |= _BV(PCIE1);
     //enable interrupts on four pins
-    PCMSK1 |= (_BV(PCINT8) | _BV(PCINT10) | _BV(PCINT12) | _BV(PCINT13));
+    PCMSK1 |= (_BV(PCINT8) | _BV(PCINT10) | _BV(PCINT12) | _BV(button_interrupt));
 }
 
 int main(void)

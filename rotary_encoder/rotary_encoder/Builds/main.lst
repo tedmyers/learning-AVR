@@ -8,24 +8,21 @@
    9               	.Ltext0:
  102               	.global	__vector_4
  104               	__vector_4:
-   1:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** #include <avr/io.h>
-   2:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** #include <avr/interrupt.h>
-   3:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** #include <util/delay.h>
-   4:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** 
-   5:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** //TODO:
-   6:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** //Somebody implement this function, you can find the code at
-   7:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** //https://github.com/pmaclellan/WirelessClub
-   8:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** //Once you copy/paste that here, practice committing your changes with Git.
-   9:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** void hsvtorgb(uint8_t*, uint8_t*, uint8_t*, uint8_t, uint8_t, uint8_t);
-  10:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** 
-  11:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** volatile uint8_t knob1_value = 0;
-  12:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** volatile uint8_t knob2_value = 0;
-  13:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** volatile uint8_t knob3_value = 0;
-  14:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** volatile uint8_t portchistory = 0;
-  15:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** 
-  16:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** //PCINT1 interrupt
-  17:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** ISR(PCINT1_vect)
-  18:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** {
+   1:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** #include <avr/io.h>
+   2:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** #include <avr/interrupt.h>
+   3:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** #include <util/delay.h>
+   4:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** 
+   5:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** volatile uint8_t knob1_value = 0;
+   6:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** volatile uint8_t portchistory = 0;
+   7:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** 
+   8:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** //Set to PC3 and PCINT11 for fruit
+   9:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** //Set to PC5 and PCINT13 for vegetable
+  10:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** #define button PC5
+  11:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** #define button_interrupt PCINT13
+  12:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** 
+  13:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** //PCINT1 interrupt
+  14:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** ISR(PCINT1_vect)
+  15:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** {
  106               	.LM0:
  107               	.LFBB1:
  108 0000 1F92      		push r1
@@ -39,51 +36,51 @@
  116               	/* frame size = 0 */
  117               	/* stack size = 5 */
  118               	.L__stack_usage = 5
-  19:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     uint8_t changedbits;
-  20:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     
-  21:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     //capture which bits have changed since last time
-  22:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     
-  23:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     changedbits = PINC ^ portchistory;
+  16:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     uint8_t changedbits;
+  17:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     
+  18:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     //capture which bits have changed since last time
+  19:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     
+  20:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     changedbits = PINC ^ portchistory;
  120               	.LM1:
  121 000e 96B1      		in r25,0x6
  122 0010 8091 0000 		lds r24,portchistory
  123 0014 8927      		eor r24,r25
-  24:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     portchistory = PINC;
+  21:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     portchistory = PINC;
  125               	.LM2:
  126 0016 96B1      		in r25,0x6
  127 0018 9093 0000 		sts portchistory,r25
-  25:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     
-  26:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     if(changedbits & _BV(PC0))
+  22:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     
+  23:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     if(changedbits & _BV(PC0))
  129               	.LM3:
  130 001c 80FF      		sbrs r24,0
  131 001e 00C0      		rjmp .L2
-  27:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     {
-  28:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****         /* PCINT8 changed */
-  29:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****         // Knob 1
-  30:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****         
-  31:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****         if (_BV(PC0) & PINC) //rising edge
+  24:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     {
+  25:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         /* PCINT8 changed */
+  26:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         // Knob 1
+  27:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         
+  28:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         if (_BV(PC0) & PINC) //rising edge
  133               	.LM4:
  134 0020 309B      		sbis 0x6,0
  135 0022 00C0      		rjmp .L3
-  32:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****         {
-  33:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****             if (_BV(PC1) & PINC) //clockwise
+  29:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         {
+  30:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****             if (_BV(PC1) & PINC) //clockwise
  137               	.LM5:
  138 0024 319B      		sbis 0x6,1
  139 0026 00C0      		rjmp .L4
  140 0028 00C0      		rjmp .L6
  141               	.L3:
-  34:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****                 knob1_value++;
-  35:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****             else
-  36:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****                 knob1_value--;
-  37:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****         }
-  38:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****         else //falling edge
-  39:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****         {
-  40:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****             if (_BV(PC1) & PINC)
+  31:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****                 knob1_value++;
+  32:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****             else
+  33:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****                 knob1_value--;
+  34:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         }
+  35:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         else //falling edge
+  36:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         {
+  37:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****             if (_BV(PC1) & PINC)
  143               	.LM6:
  144 002a 319B      		sbis 0x6,1
  145 002c 00C0      		rjmp .L6
  146               	.L4:
-  36:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****                 knob1_value--;
+  33:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****                 knob1_value--;
  148               	.LM7:
  149 002e 8091 0000 		lds r24,knob1_value
  150 0032 8150      		subi r24,lo8(-(-1))
@@ -91,25 +88,28 @@
  152 0034 8093 0000 		sts knob1_value,r24
  153 0038 00C0      		rjmp .L1
  154               	.L6:
-  41:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****                 knob1_value--;
-  42:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****             else
-  43:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****                 knob1_value++;
+  38:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****                 knob1_value--;
+  39:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****             else
+  40:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****                 knob1_value++;
  156               	.LM8:
  157 003a 8091 0000 		lds r24,knob1_value
  158 003e 8F5F      		subi r24,lo8(-(1))
  159 0040 00C0      		rjmp .L10
  160               	.L2:
-  44:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****         }
-  45:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     }
-  46:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     
-  47:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     else if(changedbits & _BV(PC5) && ((PINC & _BV(PC5)) == 0)){
+  41:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         }
+  42:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     }
+  43:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     
+  44:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     else if(changedbits & _BV(button) && ((PINC & _BV(button)) == 0)){
  162               	.LM9:
  163 0042 85FF      		sbrs r24,5
  164 0044 00C0      		rjmp .L1
  166               	.LM10:
  167 0046 3599      		sbic 0x6,5
  168 0048 00C0      		rjmp .L1
-  48:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****         PORTD ^= (1 << PD5);
+  45:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         /*Button Pressed*/
+  46:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         
+  47:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         //Turn on other LED while pressed
+  48:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         PORTD ^= (1 << PD5);
  170               	.LM11:
  171 004a 8BB1      		in r24,0xb
  172 004c 90E2      		ldi r25,lo8(32)
@@ -117,8 +117,8 @@
  174 0050 8BB9      		out 0xb,r24
  175               	.L1:
  176               	/* epilogue start */
-  49:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     }
-  50:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** }
+  49:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     }
+  50:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** }
  178               	.LM12:
  179 0052 9F91      		pop r25
  180 0054 8F91      		pop r24
@@ -130,119 +130,139 @@
  190               	.Lscope1:
  192               	.global	pwm_init
  194               	pwm_init:
-  51:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** 
-  52:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** void pwm_init(void)
-  53:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** {
+  51:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** 
+  52:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** void pwm_init(void)
+  53:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** {
  196               	.LM13:
  197               	.LFBB2:
  198               	/* prologue: function */
  199               	/* frame size = 0 */
  200               	/* stack size = 0 */
  201               	.L__stack_usage = 0
-  54:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     // Fast PWM mode
-  55:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     TCCR0A |= (1 << WGM01) | (1 << WGM00);
+  54:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     // Fast PWM mode
+  55:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     TCCR0A |= (1 << WGM01) | (1 << WGM00);
  203               	.LM14:
  204 0060 84B5      		in r24,0x24
  205 0062 8360      		ori r24,lo8(3)
  206 0064 84BD      		out 0x24,r24
-  56:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     // clear OC0A on compare match, set on BOTTOM (inverting)
-  57:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     TCCR0A |= (1 << COM0A1) | (1 << COM0A0);
+  56:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     // clear OC0A on compare match, set on BOTTOM (inverting)
+  57:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     TCCR0A |= (1 << COM0A1) | (1 << COM0A0);
  208               	.LM15:
  209 0066 84B5      		in r24,0x24
  210 0068 806C      		ori r24,lo8(-64)
  211 006a 84BD      		out 0x24,r24
-  58:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     
-  59:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     // Use clock directly, no prescaler
-  60:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     TCCR0B |= (0 << CS02) | (0 << CS01) | (1 << CS00);
+  58:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     
+  59:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     // Use clock directly, no prescaler
+  60:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     TCCR0B |= (0 << CS02) | (0 << CS01) | (1 << CS00);
  213               	.LM16:
  214 006c 85B5      		in r24,0x25
  215 006e 8160      		ori r24,lo8(1)
  216 0070 85BD      		out 0x25,r24
-  61:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     
-  62:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     // initialize counter for TIMER 0
-  63:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     TCNT0 = 0;
+  61:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     
+  62:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     // initialize counter for TIMER 0
+  63:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     TCNT0 = 0;
  218               	.LM17:
  219 0072 16BC      		out 0x26,__zero_reg__
  220 0074 0895      		ret
  222               	.Lscope2:
- 223               		.section	.text.startup,"ax",@progbits
- 225               	.global	main
- 227               	main:
-  64:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** }
-  65:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** 
-  66:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** int main(void)
-  67:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c **** {
- 229               	.LM18:
- 230               	.LFBB3:
- 231               	/* prologue: function */
- 232               	/* frame size = 0 */
- 233               	/* stack size = 0 */
- 234               	.L__stack_usage = 0
-  68:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     pwm_init();
- 236               	.LM19:
- 237 0000 0E94 0000 		call pwm_init
-  69:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     sei();			//Enable global interrupts
- 239               	.LM20:
- 240               	/* #APP */
- 241               	 ;  69 "/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c" 1
- 242 0004 7894      		sei
- 243               	 ;  0 "" 2
-  70:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     
-  71:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     
-  72:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     DDRD |= (1 << DDD6) | (1 << PD5);
- 245               	.LM21:
- 246               	/* #NOAPP */
- 247 0006 8AB1      		in r24,0xa
- 248 0008 8066      		ori r24,lo8(96)
- 249 000a 8AB9      		out 0xa,r24
-  73:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     
-  74:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     /* set PD2 and PD3 as input */
-  75:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     DDRC &= ~(1 << PCINT8);        /* PD2 and PD3 as input */
- 251               	.LM22:
- 252 000c 3898      		cbi 0x7,0
-  76:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     DDRC &= ~(1 << PCINT9);
- 254               	.LM23:
- 255 000e 3998      		cbi 0x7,1
-  77:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     PORTC |= (1 << PCINT8)|(1 << PCINT9);  //enable pullups
- 257               	.LM24:
- 258 0010 88B1      		in r24,0x8
- 259 0012 8360      		ori r24,lo8(3)
- 260 0014 88B9      		out 0x8,r24
-  78:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     
-  79:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     DDRC &= ~(1 << PC5);
- 262               	.LM25:
- 263 0016 3D98      		cbi 0x7,5
-  80:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     PORTC |= (1 << PC5);
- 265               	.LM26:
- 266 0018 459A      		sbi 0x8,5
-  81:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     
-  82:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     PCICR |= _BV(PCIE1); //enable PCINT1 interrupt signal
- 268               	.LM27:
- 269 001a 8091 6800 		lds r24,104
- 270 001e 8260      		ori r24,lo8(2)
- 271 0020 8093 6800 		sts 104,r24
-  83:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     //enable interrupts on three pins
-  84:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     PCMSK1 |= (_BV(PCINT8) | _BV(PCINT10) | _BV(PCINT12) | _BV(PCINT13));
- 273               	.LM28:
- 274 0024 8091 6C00 		lds r24,108
- 275 0028 8563      		ori r24,lo8(53)
- 276 002a 8093 6C00 		sts 108,r24
-  85:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     
-  86:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     OCR0A = 255;
- 278               	.LM29:
- 279 002e 8FEF      		ldi r24,lo8(-1)
- 280 0030 87BD      		out 0x27,r24
- 281               	.L14:
-  87:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     
-  88:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     while(1) 
-  89:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****     {
-  90:/Users/sethpenna/Desktop/rotary_encoder/rotary_encoder/main.c ****         OCR0A = knob1_value;
- 283               	.LM30:
- 284 0032 8091 0000 		lds r24,knob1_value
- 285 0036 87BD      		out 0x27,r24
- 286               	.LBB4:
- 287               	.LBB5:
- 289               	.Ltext1:
+ 224               	.global	IO_init
+ 226               	IO_init:
+  64:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** }
+  65:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** 
+  66:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** void IO_init(void){
+ 228               	.LM18:
+ 229               	.LFBB3:
+ 230               	/* prologue: function */
+ 231               	/* frame size = 0 */
+ 232               	/* stack size = 0 */
+ 233               	.L__stack_usage = 0
+  67:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     //Set two LEDs as output
+  68:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     DDRD |= (1 << DDD6) | (1 << PD5);
+ 235               	.LM19:
+ 236 0076 8AB1      		in r24,0xa
+ 237 0078 8066      		ori r24,lo8(96)
+ 238 007a 8AB9      		out 0xa,r24
+  69:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     
+  70:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     /* set PD2 and PD3 as input */
+  71:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     DDRC &= ~(1 << PCINT8);
+ 240               	.LM20:
+ 241 007c 3898      		cbi 0x7,0
+  72:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     DDRC &= ~(1 << PCINT9);
+ 243               	.LM21:
+ 244 007e 3998      		cbi 0x7,1
+  73:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     PORTC |= (1 << PCINT8)|(1 << PCINT9);  //enable pullups
+ 246               	.LM22:
+ 247 0080 88B1      		in r24,0x8
+ 248 0082 8360      		ori r24,lo8(3)
+ 249 0084 88B9      		out 0x8,r24
+  74:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     
+  75:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     //Set PC5 as input with pullup
+  76:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     DDRC &= ~(1 << button);
+ 251               	.LM23:
+ 252 0086 3D98      		cbi 0x7,5
+  77:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     PORTC |= (1 << button);
+ 254               	.LM24:
+ 255 0088 459A      		sbi 0x8,5
+  78:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     
+  79:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     //enable PCINT1 interrupt signal
+  80:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     PCICR |= _BV(PCIE1);
+ 257               	.LM25:
+ 258 008a E8E6      		ldi r30,lo8(104)
+ 259 008c F0E0      		ldi r31,0
+ 260 008e 8081      		ld r24,Z
+ 261 0090 8260      		ori r24,lo8(2)
+ 262 0092 8083      		st Z,r24
+  81:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     //enable interrupts on four pins
+  82:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     PCMSK1 |= (_BV(PCINT8) | _BV(PCINT10) | _BV(PCINT12) | _BV(button_interrupt));
+ 264               	.LM26:
+ 265 0094 ECE6      		ldi r30,lo8(108)
+ 266 0096 F0E0      		ldi r31,0
+ 267 0098 8081      		ld r24,Z
+ 268 009a 8563      		ori r24,lo8(53)
+ 269 009c 8083      		st Z,r24
+ 270 009e 0895      		ret
+ 272               	.Lscope3:
+ 273               		.section	.text.startup,"ax",@progbits
+ 275               	.global	main
+ 277               	main:
+  83:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** }
+  84:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** 
+  85:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** int main(void)
+  86:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** {
+ 279               	.LM27:
+ 280               	.LFBB4:
+ 281               	/* prologue: function */
+ 282               	/* frame size = 0 */
+ 283               	/* stack size = 0 */
+ 284               	.L__stack_usage = 0
+  87:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     //Initialize PWM and IO
+  88:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     pwm_init();
+ 286               	.LM28:
+ 287 0000 0E94 0000 		call pwm_init
+  89:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     IO_init();
+ 289               	.LM29:
+ 290 0004 0E94 0000 		call IO_init
+  90:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     
+  91:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     //Enable global interrupts
+  92:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     sei();
+ 292               	.LM30:
+ 293               	/* #APP */
+ 294               	 ;  92 "/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c" 1
+ 295 0008 7894      		sei
+ 296               	 ;  0 "" 2
+ 297               	/* #NOAPP */
+ 298               	.L15:
+  93:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     
+  94:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     while(1)
+  95:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     {
+  96:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         //Set the value of PD6 to the knob value
+  97:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         OCR0A = knob1_value;
+ 300               	.LM31:
+ 301 000a 8091 0000 		lds r24,knob1_value
+ 302 000e 87BD      		out 0x27,r24
+ 303               	.LBB4:
+ 304               	.LBB5:
+ 306               	.Ltext1:
    1:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** /* Copyright (c) 2002, Marek Michalkiewicz
    2:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    Copyright (c) 2004,2005,2007 Joerg Wunsch
    3:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    Copyright (c) 2007  Florin-Viorel Petrov
@@ -406,48 +426,41 @@
  161:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	#endif
  162:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
  163:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	__builtin_avr_delay_cycles(__ticks_dc);
- 291               	.LM31:
- 292 0038 89EF      		ldi r24,lo8(249)
- 293 003a 90E0      		ldi r25,hi8(249)
- 294 003c 0197      		1: sbiw r24,1
- 295 003e 01F4      		brne 1b
- 296 0040 00C0      		rjmp .
- 297 0042 0000      		nop
- 298 0044 00C0      		rjmp .L14
- 299               	.LBE5:
- 300               	.LBE4:
- 302               	.Lscope3:
- 303               	.global	portchistory
- 304               		.section .bss
- 307               	portchistory:
- 308 0000 00        		.zero	1
- 309               	.global	knob3_value
- 312               	knob3_value:
- 313 0001 00        		.zero	1
- 314               	.global	knob2_value
- 317               	knob2_value:
- 318 0002 00        		.zero	1
- 319               	.global	knob1_value
- 322               	knob1_value:
- 323 0003 00        		.zero	1
- 328               		.text
- 330               	.Letext0:
- 331               		.ident	"GCC: (GNU) 4.8.1"
- 332               	.global __do_clear_bss
+ 308               	.LM32:
+ 309 0010 89EF      		ldi r24,lo8(249)
+ 310 0012 90E0      		ldi r25,hi8(249)
+ 311 0014 0197      		1: sbiw r24,1
+ 312 0016 01F4      		brne 1b
+ 313 0018 00C0      		rjmp .
+ 314 001a 0000      		nop
+ 315 001c 00C0      		rjmp .L15
+ 316               	.LBE5:
+ 317               	.LBE4:
+ 319               	.Lscope4:
+ 320               	.global	portchistory
+ 321               		.section .bss
+ 324               	portchistory:
+ 325 0000 00        		.zero	1
+ 326               	.global	knob1_value
+ 329               	knob1_value:
+ 330 0001 00        		.zero	1
+ 333               		.text
+ 335               	.Letext0:
+ 336               		.ident	"GCC: (GNU) 4.8.1"
+ 337               	.global __do_clear_bss
 DEFINED SYMBOLS
                             *ABS*:00000000 main.c
-/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccWZUf9T.s:2      *ABS*:0000003e __SP_H__
-/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccWZUf9T.s:3      *ABS*:0000003d __SP_L__
-/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccWZUf9T.s:4      *ABS*:0000003f __SREG__
-/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccWZUf9T.s:5      *ABS*:00000000 __tmp_reg__
-/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccWZUf9T.s:6      *ABS*:00000001 __zero_reg__
-/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccWZUf9T.s:104    .text:00000000 __vector_4
-/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccWZUf9T.s:307    .bss:00000000 portchistory
-/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccWZUf9T.s:322    .bss:00000003 knob1_value
-/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccWZUf9T.s:194    .text:00000060 pwm_init
-/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccWZUf9T.s:227    .text.startup:00000000 main
-/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccWZUf9T.s:312    .bss:00000001 knob3_value
-/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccWZUf9T.s:317    .bss:00000002 knob2_value
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccdPDZZQ.s:2      *ABS*:0000003e __SP_H__
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccdPDZZQ.s:3      *ABS*:0000003d __SP_L__
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccdPDZZQ.s:4      *ABS*:0000003f __SREG__
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccdPDZZQ.s:5      *ABS*:00000000 __tmp_reg__
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccdPDZZQ.s:6      *ABS*:00000001 __zero_reg__
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccdPDZZQ.s:104    .text:00000000 __vector_4
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccdPDZZQ.s:324    .bss:00000000 portchistory
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccdPDZZQ.s:329    .bss:00000001 knob1_value
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccdPDZZQ.s:194    .text:00000060 pwm_init
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccdPDZZQ.s:226    .text:00000076 IO_init
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccdPDZZQ.s:277    .text.startup:00000000 main
 
 UNDEFINED SYMBOLS
 __do_clear_bss

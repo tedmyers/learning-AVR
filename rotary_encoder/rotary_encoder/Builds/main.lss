@@ -3,17 +3,17 @@ Builds/main.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00000150  000001e4  2**0
+  0 .data         00000000  00800100  00000152  000001e6  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         00000150  00000000  00000000  00000094  2**1
+  1 .text         00000152  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000004  00800100  00800100  000001e4  2**0
+  2 .bss          00000002  00800100  00800100  000001e6  2**0
                   ALLOC
-  3 .stab         0000066c  00000000  00000000  000001e4  2**2
+  3 .stab         0000066c  00000000  00000000  000001e8  2**2
                   CONTENTS, READONLY, DEBUGGING
-  4 .stabstr      00000cb6  00000000  00000000  00000850  2**0
+  4 .stabstr      00000cad  00000000  00000000  00000854  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .comment      00000011  00000000  00000000  00001506  2**0
+  5 .comment      00000011  00000000  00000000  00001501  2**0
                   CONTENTS, READONLY
   6 .debug_aranges 00000040  00000000  00000000  00001518  2**3
                   CONTENTS, READONLY, DEBUGGING
@@ -72,18 +72,18 @@ Disassembly of section .text:
   7c:	1d 92       	st	X+, r1
 
 0000007e <.do_clear_bss_start>:
-  7e:	a4 30       	cpi	r26, 0x04	; 4
+  7e:	a2 30       	cpi	r26, 0x02	; 2
   80:	b2 07       	cpc	r27, r18
   82:	e1 f7       	brne	.-8      	; 0x7c <.do_clear_bss_loop>
-  84:	0e 94 83 00 	call	0x106	; 0x106 <main>
-  88:	0c 94 a6 00 	jmp	0x14c	; 0x14c <_exit>
+  84:	0e 94 98 00 	call	0x130	; 0x130 <main>
+  88:	0c 94 a7 00 	jmp	0x14e	; 0x14e <_exit>
 
 0000008c <__bad_interrupt>:
   8c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 00000090 <__vector_4>:
-volatile uint8_t knob3_value = 0;
-volatile uint8_t portchistory = 0;
+#define button PC5
+#define button_interrupt PCINT13
 
 //PCINT1 interrupt
 ISR(PCINT1_vect)
@@ -136,9 +136,9 @@ ISR(PCINT1_vect)
                 knob1_value++;
             else
                 knob1_value--;
-  be:	80 91 03 01 	lds	r24, 0x0103
+  be:	80 91 01 01 	lds	r24, 0x0101
   c2:	81 50       	subi	r24, 0x01	; 1
-  c4:	80 93 03 01 	sts	0x0103, r24
+  c4:	80 93 01 01 	sts	0x0101, r24
   c8:	0c c0       	rjmp	.+24     	; 0xe2 <__vector_4+0x52>
         else //falling edge
         {
@@ -146,17 +146,20 @@ ISR(PCINT1_vect)
                 knob1_value--;
             else
                 knob1_value++;
-  ca:	80 91 03 01 	lds	r24, 0x0103
+  ca:	80 91 01 01 	lds	r24, 0x0101
   ce:	8f 5f       	subi	r24, 0xFF	; 255
   d0:	f9 cf       	rjmp	.-14     	; 0xc4 <__vector_4+0x34>
         }
     }
     
-    else if(changedbits & _BV(PC5) && ((PINC & _BV(PC5)) == 0)){
+    else if(changedbits & _BV(button) && ((PINC & _BV(button)) == 0)){
   d2:	85 ff       	sbrs	r24, 5
   d4:	06 c0       	rjmp	.+12     	; 0xe2 <__vector_4+0x52>
   d6:	35 99       	sbic	0x06, 5	; 6
   d8:	04 c0       	rjmp	.+8      	; 0xe2 <__vector_4+0x52>
+        /*Button Pressed*/
+        
+        //Turn on other LED while pressed
         PORTD ^= (1 << PD5);
   da:	8b b1       	in	r24, 0x0b	; 11
   dc:	90 e2       	ldi	r25, 0x20	; 32
@@ -198,72 +201,85 @@ void pwm_init(void)
  102:	16 bc       	out	0x26, r1	; 38
  104:	08 95       	ret
 
-00000106 <main>:
+00000106 <IO_init>:
+}
+
+void IO_init(void){
+    //Set two LEDs as output
+    DDRD |= (1 << DDD6) | (1 << PD5);
+ 106:	8a b1       	in	r24, 0x0a	; 10
+ 108:	80 66       	ori	r24, 0x60	; 96
+ 10a:	8a b9       	out	0x0a, r24	; 10
+    
+    /* set PD2 and PD3 as input */
+    DDRC &= ~(1 << PCINT8);
+ 10c:	38 98       	cbi	0x07, 0	; 7
+    DDRC &= ~(1 << PCINT9);
+ 10e:	39 98       	cbi	0x07, 1	; 7
+    PORTC |= (1 << PCINT8)|(1 << PCINT9);  //enable pullups
+ 110:	88 b1       	in	r24, 0x08	; 8
+ 112:	83 60       	ori	r24, 0x03	; 3
+ 114:	88 b9       	out	0x08, r24	; 8
+    
+    //Set PC5 as input with pullup
+    DDRC &= ~(1 << button);
+ 116:	3d 98       	cbi	0x07, 5	; 7
+    PORTC |= (1 << button);
+ 118:	45 9a       	sbi	0x08, 5	; 8
+    
+    //enable PCINT1 interrupt signal
+    PCICR |= _BV(PCIE1);
+ 11a:	e8 e6       	ldi	r30, 0x68	; 104
+ 11c:	f0 e0       	ldi	r31, 0x00	; 0
+ 11e:	80 81       	ld	r24, Z
+ 120:	82 60       	ori	r24, 0x02	; 2
+ 122:	80 83       	st	Z, r24
+    //enable interrupts on four pins
+    PCMSK1 |= (_BV(PCINT8) | _BV(PCINT10) | _BV(PCINT12) | _BV(button_interrupt));
+ 124:	ec e6       	ldi	r30, 0x6C	; 108
+ 126:	f0 e0       	ldi	r31, 0x00	; 0
+ 128:	80 81       	ld	r24, Z
+ 12a:	85 63       	ori	r24, 0x35	; 53
+ 12c:	80 83       	st	Z, r24
+ 12e:	08 95       	ret
+
+00000130 <main>:
 }
 
 int main(void)
 {
+    //Initialize PWM and IO
     pwm_init();
- 106:	0e 94 78 00 	call	0xf0	; 0xf0 <pwm_init>
-    sei();			//Enable global interrupts
- 10a:	78 94       	sei
+ 130:	0e 94 78 00 	call	0xf0	; 0xf0 <pwm_init>
+    IO_init();
+ 134:	0e 94 83 00 	call	0x106	; 0x106 <IO_init>
     
+    //Enable global interrupts
+    sei();
+ 138:	78 94       	sei
     
-    DDRD |= (1 << DDD6) | (1 << PD5);
- 10c:	8a b1       	in	r24, 0x0a	; 10
- 10e:	80 66       	ori	r24, 0x60	; 96
- 110:	8a b9       	out	0x0a, r24	; 10
-    
-    /* set PD2 and PD3 as input */
-    DDRC &= ~(1 << PCINT8);        /* PD2 and PD3 as input */
- 112:	38 98       	cbi	0x07, 0	; 7
-    DDRC &= ~(1 << PCINT9);
- 114:	39 98       	cbi	0x07, 1	; 7
-    PORTC |= (1 << PCINT8)|(1 << PCINT9);  //enable pullups
- 116:	88 b1       	in	r24, 0x08	; 8
- 118:	83 60       	ori	r24, 0x03	; 3
- 11a:	88 b9       	out	0x08, r24	; 8
-    
-    DDRC &= ~(1 << PC5);
- 11c:	3d 98       	cbi	0x07, 5	; 7
-    PORTC |= (1 << PC5);
- 11e:	45 9a       	sbi	0x08, 5	; 8
-    
-    PCICR |= _BV(PCIE1); //enable PCINT1 interrupt signal
- 120:	80 91 68 00 	lds	r24, 0x0068
- 124:	82 60       	ori	r24, 0x02	; 2
- 126:	80 93 68 00 	sts	0x0068, r24
-    //enable interrupts on three pins
-    PCMSK1 |= (_BV(PCINT8) | _BV(PCINT10) | _BV(PCINT12) | _BV(PCINT13));
- 12a:	80 91 6c 00 	lds	r24, 0x006C
- 12e:	85 63       	ori	r24, 0x35	; 53
- 130:	80 93 6c 00 	sts	0x006C, r24
-    
-    OCR0A = 255;
- 134:	8f ef       	ldi	r24, 0xFF	; 255
- 136:	87 bd       	out	0x27, r24	; 39
-    
-    while(1) 
+    while(1)
     {
+        //Set the value of PD6 to the knob value
         OCR0A = knob1_value;
- 138:	80 91 03 01 	lds	r24, 0x0103
- 13c:	87 bd       	out	0x27, r24	; 39
+ 13a:	80 91 01 01 	lds	r24, 0x0101
+ 13e:	87 bd       	out	0x27, r24	; 39
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
- 13e:	89 ef       	ldi	r24, 0xF9	; 249
- 140:	90 e0       	ldi	r25, 0x00	; 0
- 142:	01 97       	sbiw	r24, 0x01	; 1
- 144:	f1 f7       	brne	.-4      	; 0x142 <main+0x3c>
- 146:	00 c0       	rjmp	.+0      	; 0x148 <main+0x42>
- 148:	00 00       	nop
- 14a:	f6 cf       	rjmp	.-20     	; 0x138 <main+0x32>
+ 140:	89 ef       	ldi	r24, 0xF9	; 249
+ 142:	90 e0       	ldi	r25, 0x00	; 0
+ 144:	01 97       	sbiw	r24, 0x01	; 1
+ 146:	f1 f7       	brne	.-4      	; 0x144 <main+0x14>
+ 148:	00 c0       	rjmp	.+0      	; 0x14a <main+0x1a>
+ 14a:	00 00       	nop
+ 14c:	f6 cf       	rjmp	.-20     	; 0x13a <main+0xa>
 
-0000014c <_exit>:
- 14c:	f8 94       	cli
+0000014e <_exit>:
+ 14e:	f8 94       	cli
 
-0000014e <__stop_program>:
- 14e:	ff cf       	rjmp	.-2      	; 0x14e <__stop_program>
+00000150 <__stop_program>:
+ 150:	ff cf       	rjmp	.-2      	; 0x150 <__stop_program>
