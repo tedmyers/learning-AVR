@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>727AE8E6-1017-4A2C-9DF6-5B03CBA08044</string>
+	<key>IDESourceControlProjectName</key>
+	<string>rotary_encoder</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>8EF74BB4FEB6E6CF0C0EEDADE0B65E946B73B14A</key>
+		<string>https://github.com/smpenna3/learning-AVR.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>rotary_encoder/rotary_encoder.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>8EF74BB4FEB6E6CF0C0EEDADE0B65E946B73B14A</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/smpenna3/learning-AVR.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>8EF74BB4FEB6E6CF0C0EEDADE0B65E946B73B14A</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>8EF74BB4FEB6E6CF0C0EEDADE0B65E946B73B14A</string>
+			<key>IDESourceControlWCCName</key>
+			<string>learning-AVR</string>
+		</dict>
+	</array>
+</dict>
+</plist>

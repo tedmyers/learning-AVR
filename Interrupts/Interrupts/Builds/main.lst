@@ -1,0 +1,122 @@
+   1               		.file	"main.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   8               		.text
+   9               	.Ltext0:
+ 110               	.global	__vector_4
+ 112               	__vector_4:
+   1:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c **** #include <stdio.h>
+   2:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c **** #include <avr/io.h>
+   3:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c **** #include <avr/interrupt.h>
+   4:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c **** #include <util/delay.h>
+   5:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c **** 
+   6:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c **** ISR(PCINT1_vect){
+ 114               	.LM0:
+ 115               	.LFBB1:
+ 116 0000 1F92      		push r1
+ 117 0002 0F92      		push r0
+ 118 0004 0FB6      		in r0,__SREG__
+ 119 0006 0F92      		push r0
+ 120 0008 1124      		clr __zero_reg__
+ 121 000a 8F93      		push r24
+ 122               	/* prologue: Signal */
+ 123               	/* frame size = 0 */
+ 124               	/* stack size = 4 */
+ 125               	.L__stack_usage = 4
+   7:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c ****     PORTD = 0xff;
+ 127               	.LM1:
+ 128 000c 8FEF      		ldi r24,lo8(-1)
+ 129 000e 8BB9      		out 0xb,r24
+ 130               	/* epilogue start */
+   8:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c **** }
+ 132               	.LM2:
+ 133 0010 8F91      		pop r24
+ 134 0012 0F90      		pop r0
+ 135 0014 0FBE      		out __SREG__,r0
+ 136 0016 0F90      		pop r0
+ 137 0018 1F90      		pop r1
+ 138 001a 1895      		reti
+ 140               	.Lscope1:
+ 142               	.global	initIO
+ 144               	initIO:
+   9:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c **** 
+  10:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c **** void initIO(void) {
+ 146               	.LM3:
+ 147               	.LFBB2:
+ 148               	/* prologue: function */
+ 149               	/* frame size = 0 */
+ 150               	/* stack size = 0 */
+ 151               	.L__stack_usage = 0
+  11:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c ****     //Define PC3 as input with pullup-resistor
+  12:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c ****     DDRC &= ~(1 << PC3);
+ 153               	.LM4:
+ 154 001c 3B98      		cbi 0x7,3
+  13:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c ****     PORTC |= (1 << PC3);
+ 156               	.LM5:
+ 157 001e 439A      		sbi 0x8,3
+  14:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c ****     
+  15:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c ****     //Enable interrupt for PCINT_11
+  16:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c ****     PCICR |= _BV(PCIE1);
+ 159               	.LM6:
+ 160 0020 E8E6      		ldi r30,lo8(104)
+ 161 0022 F0E0      		ldi r31,0
+ 162 0024 8081      		ld r24,Z
+ 163 0026 8260      		ori r24,lo8(2)
+ 164 0028 8083      		st Z,r24
+  17:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c ****     PCMSK1 |= (_BV(PCINT11));
+ 166               	.LM7:
+ 167 002a ECE6      		ldi r30,lo8(108)
+ 168 002c F0E0      		ldi r31,0
+ 169 002e 8081      		ld r24,Z
+ 170 0030 8860      		ori r24,lo8(8)
+ 171 0032 8083      		st Z,r24
+  18:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c ****     
+  19:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c ****     //Set LED as output
+  20:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c ****     DDRD |= (1 << PD5);
+ 173               	.LM8:
+ 174 0034 559A      		sbi 0xa,5
+ 175 0036 0895      		ret
+ 177               	.Lscope2:
+ 178               		.section	.text.startup,"ax",@progbits
+ 180               	.global	main
+ 182               	main:
+  21:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c **** }
+  22:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c **** 
+  23:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c **** int main(void) {
+ 184               	.LM9:
+ 185               	.LFBB3:
+ 186               	/* prologue: function */
+ 187               	/* frame size = 0 */
+ 188               	/* stack size = 0 */
+ 189               	.L__stack_usage = 0
+  24:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c **** 	initIO();
+ 191               	.LM10:
+ 192 0000 0E94 0000 		call initIO
+  25:/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c ****     sei();
+ 194               	.LM11:
+ 195               	/* #APP */
+ 196               	 ;  25 "/Users/sethpenna/Desktop/Interrupts/Interrupts/main.c" 1
+ 197 0004 7894      		sei
+ 198               	 ;  0 "" 2
+ 199               	/* #NOAPP */
+ 200               	.L4:
+ 201 0006 00C0      		rjmp .L4
+ 203               	.Lscope3:
+ 204               		.text
+ 206               	.Letext0:
+ 207               		.ident	"GCC: (GNU) 4.8.1"
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccLtrTvj.s:2      *ABS*:0000003e __SP_H__
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccLtrTvj.s:3      *ABS*:0000003d __SP_L__
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccLtrTvj.s:4      *ABS*:0000003f __SREG__
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccLtrTvj.s:5      *ABS*:00000000 __tmp_reg__
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccLtrTvj.s:6      *ABS*:00000001 __zero_reg__
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccLtrTvj.s:112    .text:00000000 __vector_4
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccLtrTvj.s:144    .text:0000001c initIO
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccLtrTvj.s:182    .text.startup:00000000 main
+
+NO UNDEFINED SYMBOLS

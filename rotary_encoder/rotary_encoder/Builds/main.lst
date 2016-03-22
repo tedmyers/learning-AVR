@@ -1,0 +1,466 @@
+   1               		.file	"main.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   8               		.text
+   9               	.Ltext0:
+ 102               	.global	__vector_4
+ 104               	__vector_4:
+   1:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** #include <avr/io.h>
+   2:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** #include <avr/interrupt.h>
+   3:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** #include <util/delay.h>
+   4:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** 
+   5:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** volatile uint8_t knob1_value = 0;
+   6:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** volatile uint8_t portchistory = 0;
+   7:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** 
+   8:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** //Set to PC3 and PCINT11 for fruit
+   9:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** //Set to PC5 and PCINT13 for vegetable
+  10:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** #define button PC5
+  11:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** #define button_interrupt PCINT13
+  12:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** 
+  13:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** //PCINT1 interrupt
+  14:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** ISR(PCINT1_vect)
+  15:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** {
+ 106               	.LM0:
+ 107               	.LFBB1:
+ 108 0000 1F92      		push r1
+ 109 0002 0F92      		push r0
+ 110 0004 0FB6      		in r0,__SREG__
+ 111 0006 0F92      		push r0
+ 112 0008 1124      		clr __zero_reg__
+ 113 000a 8F93      		push r24
+ 114 000c 9F93      		push r25
+ 115               	/* prologue: Signal */
+ 116               	/* frame size = 0 */
+ 117               	/* stack size = 5 */
+ 118               	.L__stack_usage = 5
+  16:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     uint8_t changedbits;
+  17:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     
+  18:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     //capture which bits have changed since last time
+  19:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     
+  20:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     changedbits = PINC ^ portchistory;
+ 120               	.LM1:
+ 121 000e 96B1      		in r25,0x6
+ 122 0010 8091 0000 		lds r24,portchistory
+ 123 0014 8927      		eor r24,r25
+  21:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     portchistory = PINC;
+ 125               	.LM2:
+ 126 0016 96B1      		in r25,0x6
+ 127 0018 9093 0000 		sts portchistory,r25
+  22:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     
+  23:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     if(changedbits & _BV(PC0))
+ 129               	.LM3:
+ 130 001c 80FF      		sbrs r24,0
+ 131 001e 00C0      		rjmp .L2
+  24:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     {
+  25:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         /* PCINT8 changed */
+  26:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         // Knob 1
+  27:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         
+  28:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         if (_BV(PC0) & PINC) //rising edge
+ 133               	.LM4:
+ 134 0020 309B      		sbis 0x6,0
+ 135 0022 00C0      		rjmp .L3
+  29:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         {
+  30:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****             if (_BV(PC1) & PINC) //clockwise
+ 137               	.LM5:
+ 138 0024 319B      		sbis 0x6,1
+ 139 0026 00C0      		rjmp .L4
+ 140 0028 00C0      		rjmp .L6
+ 141               	.L3:
+  31:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****                 knob1_value++;
+  32:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****             else
+  33:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****                 knob1_value--;
+  34:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         }
+  35:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         else //falling edge
+  36:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         {
+  37:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****             if (_BV(PC1) & PINC)
+ 143               	.LM6:
+ 144 002a 319B      		sbis 0x6,1
+ 145 002c 00C0      		rjmp .L6
+ 146               	.L4:
+  33:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****                 knob1_value--;
+ 148               	.LM7:
+ 149 002e 8091 0000 		lds r24,knob1_value
+ 150 0032 8150      		subi r24,lo8(-(-1))
+ 151               	.L10:
+ 152 0034 8093 0000 		sts knob1_value,r24
+ 153 0038 00C0      		rjmp .L1
+ 154               	.L6:
+  38:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****                 knob1_value--;
+  39:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****             else
+  40:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****                 knob1_value++;
+ 156               	.LM8:
+ 157 003a 8091 0000 		lds r24,knob1_value
+ 158 003e 8F5F      		subi r24,lo8(-(1))
+ 159 0040 00C0      		rjmp .L10
+ 160               	.L2:
+  41:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         }
+  42:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     }
+  43:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     
+  44:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     else if(changedbits & _BV(button) && ((PINC & _BV(button)) == 0)){
+ 162               	.LM9:
+ 163 0042 85FF      		sbrs r24,5
+ 164 0044 00C0      		rjmp .L1
+ 166               	.LM10:
+ 167 0046 3599      		sbic 0x6,5
+ 168 0048 00C0      		rjmp .L1
+  45:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         /*Button Pressed*/
+  46:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         
+  47:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         //Turn on other LED while pressed
+  48:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         PORTD ^= (1 << PD5);
+ 170               	.LM11:
+ 171 004a 8BB1      		in r24,0xb
+ 172 004c 90E2      		ldi r25,lo8(32)
+ 173 004e 8927      		eor r24,r25
+ 174 0050 8BB9      		out 0xb,r24
+ 175               	.L1:
+ 176               	/* epilogue start */
+  49:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     }
+  50:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** }
+ 178               	.LM12:
+ 179 0052 9F91      		pop r25
+ 180 0054 8F91      		pop r24
+ 181 0056 0F90      		pop r0
+ 182 0058 0FBE      		out __SREG__,r0
+ 183 005a 0F90      		pop r0
+ 184 005c 1F90      		pop r1
+ 185 005e 1895      		reti
+ 190               	.Lscope1:
+ 192               	.global	pwm_init
+ 194               	pwm_init:
+  51:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** 
+  52:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** void pwm_init(void)
+  53:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** {
+ 196               	.LM13:
+ 197               	.LFBB2:
+ 198               	/* prologue: function */
+ 199               	/* frame size = 0 */
+ 200               	/* stack size = 0 */
+ 201               	.L__stack_usage = 0
+  54:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     // Fast PWM mode
+  55:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     TCCR0A |= (1 << WGM01) | (1 << WGM00);
+ 203               	.LM14:
+ 204 0060 84B5      		in r24,0x24
+ 205 0062 8360      		ori r24,lo8(3)
+ 206 0064 84BD      		out 0x24,r24
+  56:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     // clear OC0A on compare match, set on BOTTOM (inverting)
+  57:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     TCCR0A |= (1 << COM0A1) | (1 << COM0A0);
+ 208               	.LM15:
+ 209 0066 84B5      		in r24,0x24
+ 210 0068 806C      		ori r24,lo8(-64)
+ 211 006a 84BD      		out 0x24,r24
+  58:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     
+  59:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     // Use clock directly, no prescaler
+  60:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     TCCR0B |= (0 << CS02) | (0 << CS01) | (1 << CS00);
+ 213               	.LM16:
+ 214 006c 85B5      		in r24,0x25
+ 215 006e 8160      		ori r24,lo8(1)
+ 216 0070 85BD      		out 0x25,r24
+  61:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     
+  62:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     // initialize counter for TIMER 0
+  63:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     TCNT0 = 0;
+ 218               	.LM17:
+ 219 0072 16BC      		out 0x26,__zero_reg__
+ 220 0074 0895      		ret
+ 222               	.Lscope2:
+ 224               	.global	IO_init
+ 226               	IO_init:
+  64:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** }
+  65:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** 
+  66:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** void IO_init(void){
+ 228               	.LM18:
+ 229               	.LFBB3:
+ 230               	/* prologue: function */
+ 231               	/* frame size = 0 */
+ 232               	/* stack size = 0 */
+ 233               	.L__stack_usage = 0
+  67:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     //Set two LEDs as output
+  68:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     DDRD |= (1 << DDD6) | (1 << PD5);
+ 235               	.LM19:
+ 236 0076 8AB1      		in r24,0xa
+ 237 0078 8066      		ori r24,lo8(96)
+ 238 007a 8AB9      		out 0xa,r24
+  69:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     
+  70:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     /* set PD2 and PD3 as input */
+  71:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     DDRC &= ~(1 << PCINT8);
+ 240               	.LM20:
+ 241 007c 3898      		cbi 0x7,0
+  72:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     DDRC &= ~(1 << PCINT9);
+ 243               	.LM21:
+ 244 007e 3998      		cbi 0x7,1
+  73:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     PORTC |= (1 << PCINT8)|(1 << PCINT9);  //enable pullups
+ 246               	.LM22:
+ 247 0080 88B1      		in r24,0x8
+ 248 0082 8360      		ori r24,lo8(3)
+ 249 0084 88B9      		out 0x8,r24
+  74:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     
+  75:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     //Set PC5 as input with pullup
+  76:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     DDRC &= ~(1 << button);
+ 251               	.LM23:
+ 252 0086 3D98      		cbi 0x7,5
+  77:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     PORTC |= (1 << button);
+ 254               	.LM24:
+ 255 0088 459A      		sbi 0x8,5
+  78:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     
+  79:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     //enable PCINT1 interrupt signal
+  80:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     PCICR |= _BV(PCIE1);
+ 257               	.LM25:
+ 258 008a E8E6      		ldi r30,lo8(104)
+ 259 008c F0E0      		ldi r31,0
+ 260 008e 8081      		ld r24,Z
+ 261 0090 8260      		ori r24,lo8(2)
+ 262 0092 8083      		st Z,r24
+  81:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     //enable interrupts on four pins
+  82:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     PCMSK1 |= (_BV(PCINT8) | _BV(PCINT10) | _BV(PCINT12) | _BV(button_interrupt));
+ 264               	.LM26:
+ 265 0094 ECE6      		ldi r30,lo8(108)
+ 266 0096 F0E0      		ldi r31,0
+ 267 0098 8081      		ld r24,Z
+ 268 009a 8563      		ori r24,lo8(53)
+ 269 009c 8083      		st Z,r24
+ 270 009e 0895      		ret
+ 272               	.Lscope3:
+ 273               		.section	.text.startup,"ax",@progbits
+ 275               	.global	main
+ 277               	main:
+  83:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** }
+  84:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** 
+  85:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** int main(void)
+  86:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c **** {
+ 279               	.LM27:
+ 280               	.LFBB4:
+ 281               	/* prologue: function */
+ 282               	/* frame size = 0 */
+ 283               	/* stack size = 0 */
+ 284               	.L__stack_usage = 0
+  87:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     //Initialize PWM and IO
+  88:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     pwm_init();
+ 286               	.LM28:
+ 287 0000 0E94 0000 		call pwm_init
+  89:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     IO_init();
+ 289               	.LM29:
+ 290 0004 0E94 0000 		call IO_init
+  90:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     
+  91:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     //Enable global interrupts
+  92:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     sei();
+ 292               	.LM30:
+ 293               	/* #APP */
+ 294               	 ;  92 "/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c" 1
+ 295 0008 7894      		sei
+ 296               	 ;  0 "" 2
+ 297               	/* #NOAPP */
+ 298               	.L15:
+  93:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     
+  94:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     while(1)
+  95:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****     {
+  96:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         //Set the value of PD6 to the knob value
+  97:/Users/sethpenna/Desktop/learning-AVR/rotary_encoder/rotary_encoder/main.c ****         OCR0A = knob1_value;
+ 300               	.LM31:
+ 301 000a 8091 0000 		lds r24,knob1_value
+ 302 000e 87BD      		out 0x27,r24
+ 303               	.LBB4:
+ 304               	.LBB5:
+ 306               	.Ltext1:
+   1:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** /* Copyright (c) 2002, Marek Michalkiewicz
+   2:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    Copyright (c) 2004,2005,2007 Joerg Wunsch
+   3:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    Copyright (c) 2007  Florin-Viorel Petrov
+   4:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    All rights reserved.
+   5:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+   6:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    Redistribution and use in source and binary forms, with or without
+   7:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    modification, are permitted provided that the following conditions are met:
+   8:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+   9:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    * Redistributions of source code must retain the above copyright
+  10:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****      notice, this list of conditions and the following disclaimer.
+  11:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  12:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    * Redistributions in binary form must reproduce the above copyright
+  13:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****      notice, this list of conditions and the following disclaimer in
+  14:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****      the documentation and/or other materials provided with the
+  15:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****      distribution.
+  16:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  17:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    * Neither the name of the copyright holders nor the names of
+  18:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****      contributors may be used to endorse or promote products derived
+  19:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****      from this software without specific prior written permission.
+  20:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  21:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  22:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  23:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  24:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  25:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  26:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  27:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  28:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  29:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  30:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+  31:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   POSSIBILITY OF SUCH DAMAGE. */
+  32:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  33:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** /* $Id$ */
+  34:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  35:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #ifndef _UTIL_DELAY_H_
+  36:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #define _UTIL_DELAY_H_ 1
+  37:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  38:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #ifndef __HAS_DELAY_CYCLES
+  39:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #define __HAS_DELAY_CYCLES 1
+  40:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #endif
+  41:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  42:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #include <inttypes.h>
+  43:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #include <util/delay_basic.h>
+  44:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #include <math.h>
+  45:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  46:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** /** \file */
+  47:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** /** \defgroup util_delay <util/delay.h>: Convenience functions for busy-wait delay loops
+  48:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     \code
+  49:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     #define F_CPU 1000000UL  // 1 MHz
+  50:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     //#define F_CPU 14.7456E6
+  51:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     #include <util/delay.h>
+  52:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     \endcode
+  53:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  54:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     \note As an alternative method, it is possible to pass the
+  55:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     F_CPU macro down to the compiler from the Makefile.
+  56:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     Obviously, in that case, no \c \#define statement should be
+  57:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     used.
+  58:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  59:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     The functions in this header file are wrappers around the basic
+  60:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     busy-wait functions from <util/delay_basic.h>.  They are meant as
+  61:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     convenience functions where actual time values can be specified
+  62:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     rather than a number of cycles to wait for.  The idea behind is
+  63:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     that compile-time constant expressions will be eliminated by
+  64:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     compiler optimization so floating-point expressions can be used
+  65:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     to calculate the number of delay cycles needed based on the CPU
+  66:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     frequency passed by the macro F_CPU.
+  67:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  68:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     \note In order for these functions to work as intended, compiler
+  69:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     optimizations <em>must</em> be enabled, and the delay time
+  70:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     <em>must</em> be an expression that is a known constant at
+  71:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     compile-time.  If these requirements are not met, the resulting
+  72:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     delay will be much longer (and basically unpredictable), and
+  73:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     applications that otherwise do not use floating-point calculations
+  74:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     will experience severe code bloat by the floating-point library
+  75:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     routines linked into the application.
+  76:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  77:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     The functions available allow the specification of microsecond, and
+  78:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     millisecond delays directly, using the application-supplied macro
+  79:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     F_CPU as the CPU clock frequency (in Hertz).
+  80:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  81:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** */
+  82:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  83:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #if !defined(__DOXYGEN__)
+  84:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** static inline void _delay_us(double __us) __attribute__((always_inline));
+  85:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** static inline void _delay_ms(double __ms) __attribute__((always_inline));
+  86:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #endif
+  87:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  88:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #ifndef F_CPU
+  89:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** /* prevent compiler error by supplying a default */
+  90:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** # warning "F_CPU not defined for <util/delay.h>"
+  91:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** # define F_CPU 1000000UL
+  92:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #endif
+  93:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  94:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #ifndef __OPTIMIZE__
+  95:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** # warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+  96:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #endif
+  97:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  98:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #if __HAS_DELAY_CYCLES && defined(__OPTIMIZE__) && \
+  99:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   !defined(__DELAY_BACKWARD_COMPATIBLE__) &&	   \
+ 100:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   __STDC_HOSTED__
+ 101:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #  include <math.h>
+ 102:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #endif
+ 103:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 104:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** /**
+ 105:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    \ingroup util_delay
+ 106:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 107:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    Perform a delay of \c __ms milliseconds, using _delay_loop_2().
+ 108:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 109:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    The macro F_CPU is supposed to be defined to a
+ 110:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    constant defining the CPU clock frequency (in Hertz).
+ 111:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 112:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    The maximal possible delay is 262.14 ms / F_CPU in MHz.
+ 113:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 114:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    When the user request delay which exceed the maximum possible one,
+ 115:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    _delay_ms() provides a decreased resolution functionality. In this
+ 116:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    mode _delay_ms() will work with a resolution of 1/10 ms, providing
+ 117:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    delays up to 6.5535 seconds (independent from CPU frequency).  The
+ 118:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    user will not be informed about decreased resolution.
+ 119:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 120:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    If the avr-gcc toolchain has __builtin_avr_delay_cycles(unsigned long)
+ 121:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    support, maximal possible delay is 4294967.295 ms/ F_CPU in MHz. For
+ 122:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    values greater than the maximal possible delay, overflows results in
+ 123:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    no delay i.e., 0ms.
+ 124:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 125:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    Conversion of __us into clock cycles may not always result in integer.
+ 126:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    By default, the clock cycles rounded up to next integer. This ensures that
+ 127:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    the user gets atleast __us microseconds of delay.
+ 128:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 129:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    Alternatively, user can define __DELAY_ROUND_DOWN__ and __DELAY_ROUND_CLOSEST__
+ 130:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    to round down and round to closest integer.
+ 131:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 132:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    Note: The new implementation of _delay_ms(double __ms) with 
+ 133:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     __builtin_avr_delay_cycles(unsigned long) support is not backward compatible. 
+ 134:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    User can define __DELAY_BACKWARD_COMPATIBLE__ to get a backward compatible delay.
+ 135:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    Also, the backward compatible
+ 136:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    algorithm will be chosen if the code is compiled in a <em>freestanding
+ 137:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    environment</em> (GCC option \c -ffreestanding), as the math functions
+ 138:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    required for rounding are not available to the compiler then.
+ 139:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 140:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****  */
+ 141:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** void
+ 142:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** _delay_ms(double __ms)
+ 143:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** {
+ 144:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	double __tmp ; 
+ 145:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #if __HAS_DELAY_CYCLES && defined(__OPTIMIZE__) && \
+ 146:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   !defined(__DELAY_BACKWARD_COMPATIBLE__) &&	   \
+ 147:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   __STDC_HOSTED__
+ 148:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	uint32_t __ticks_dc;
+ 149:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	extern void __builtin_avr_delay_cycles(unsigned long);
+ 150:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	__tmp = ((F_CPU) / 1e3) * __ms;
+ 151:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 152:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	#if defined(__DELAY_ROUND_DOWN__)
+ 153:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 		__ticks_dc = (uint32_t)fabs(__tmp);
+ 154:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 155:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	#elif defined(__DELAY_ROUND_CLOSEST__)
+ 156:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 		__ticks_dc = (uint32_t)(fabs(__tmp)+0.5);
+ 157:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 158:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	#else
+ 159:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 		//round up by default
+ 160:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+ 161:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	#endif
+ 162:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 163:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	__builtin_avr_delay_cycles(__ticks_dc);
+ 308               	.LM32:
+ 309 0010 89EF      		ldi r24,lo8(249)
+ 310 0012 90E0      		ldi r25,hi8(249)
+ 311 0014 0197      		1: sbiw r24,1
+ 312 0016 01F4      		brne 1b
+ 313 0018 00C0      		rjmp .
+ 314 001a 0000      		nop
+ 315 001c 00C0      		rjmp .L15
+ 316               	.LBE5:
+ 317               	.LBE4:
+ 319               	.Lscope4:
+ 320               	.global	portchistory
+ 321               		.section .bss
+ 324               	portchistory:
+ 325 0000 00        		.zero	1
+ 326               	.global	knob1_value
+ 329               	knob1_value:
+ 330 0001 00        		.zero	1
+ 333               		.text
+ 335               	.Letext0:
+ 336               		.ident	"GCC: (GNU) 4.8.1"
+ 337               	.global __do_clear_bss
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccdPDZZQ.s:2      *ABS*:0000003e __SP_H__
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccdPDZZQ.s:3      *ABS*:0000003d __SP_L__
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccdPDZZQ.s:4      *ABS*:0000003f __SREG__
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccdPDZZQ.s:5      *ABS*:00000000 __tmp_reg__
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccdPDZZQ.s:6      *ABS*:00000001 __zero_reg__
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccdPDZZQ.s:104    .text:00000000 __vector_4
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccdPDZZQ.s:324    .bss:00000000 portchistory
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccdPDZZQ.s:329    .bss:00000001 knob1_value
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccdPDZZQ.s:194    .text:00000060 pwm_init
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccdPDZZQ.s:226    .text:00000076 IO_init
+/var/folders/7r/172l2v6s1790wxggh2qc74fc0000gn/T//ccdPDZZQ.s:277    .text.startup:00000000 main
+
+UNDEFINED SYMBOLS
+__do_clear_bss
