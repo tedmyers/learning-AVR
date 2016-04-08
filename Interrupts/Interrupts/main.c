@@ -10,7 +10,7 @@
 #define button_interrupt PCINT13
 
 ISR(PCINT1_vect){
-    //Turn on all of port D
+    //Turn on PD5
     PORTD |= (1 << PD5);
 }
 
