@@ -6,7 +6,7 @@
 void pwm_init(void);
 // Note: change button pin for fruit/vegetable boards
 
-// Pin Definitions (same for fruit and vegetable boards)
+// Pin Definitions (mostly same for fruit and vegetable boards)
 #define RED_PIN     PD3
 #define GREEN_PIN   PD6
 #define BLUE_PIN    PD5

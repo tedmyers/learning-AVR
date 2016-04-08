@@ -322,9 +322,9 @@ END GROUP
  *(.stab)
  .stab          0x00000000      0x66c Builds/main.o
 
-.stabstr        0x00000000      0xcad
+.stabstr        0x00000000      0xcab
  *(.stabstr)
- .stabstr       0x00000000      0xcad Builds/main.o
+ .stabstr       0x00000000      0xcab Builds/main.o
 
 .stab.excl
  *(.stab.excl)

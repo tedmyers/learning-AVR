@@ -343,11 +343,11 @@
  255               		.ident	"GCC: (GNU) 4.8.1"
 DEFINED SYMBOLS
                             *ABS*:00000000 main.c
-/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccSWOCVm.s:2      *ABS*:0000003e __SP_H__
-/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccSWOCVm.s:3      *ABS*:0000003d __SP_L__
-/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccSWOCVm.s:4      *ABS*:0000003f __SREG__
-/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccSWOCVm.s:5      *ABS*:00000000 __tmp_reg__
-/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccSWOCVm.s:6      *ABS*:00000001 __zero_reg__
-/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccSWOCVm.s:105    .text.startup:00000000 main
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccYCA42B.s:2      *ABS*:0000003e __SP_H__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccYCA42B.s:3      *ABS*:0000003d __SP_L__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccYCA42B.s:4      *ABS*:0000003f __SREG__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccYCA42B.s:5      *ABS*:00000000 __tmp_reg__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccYCA42B.s:6      *ABS*:00000001 __zero_reg__
+/var/folders/l2/bb4sdg190jl6980wclmsgs7h0000gr/T//ccYCA42B.s:105    .text.startup:00000000 main
 
 NO UNDEFINED SYMBOLS
